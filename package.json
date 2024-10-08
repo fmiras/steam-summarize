@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "sync-reviews": "ts-node scripts/sync-reviews.ts"
   },
   "dependencies": {
     "@radix-ui/react-collapsible": "^1.1.0",
@@ -14,6 +15,7 @@
     "@radix-ui/react-progress": "^1.1.0",
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-tooltip": "^1.1.2",
+    "@supabase/supabase-js": "^2.45.4",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "lucide-react": "^0.445.0",
@@ -25,9 +27,11 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
+    "@types/cli-progress": "^3.11.6",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "cli-progress": "^3.12.0",
     "eslint": "^8",
     "eslint-config-next": "14.2.13",
     "postcss": "^8",
