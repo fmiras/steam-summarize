@@ -1,6 +1,4 @@
-import { omit } from './object'
-
-interface SteamReview {
+export interface SteamReview {
   recommendationid: string
   language: string
   review: string
