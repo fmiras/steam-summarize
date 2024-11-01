@@ -2,12 +2,14 @@
   "name": "nextjs",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "sync-reviews": "ts-node scripts/sync-reviews.ts"
+    "sync-reviews": "ts-node scripts/sync-reviews.ts",
+    "summarize-recent-reviews": "ts-node --esm scripts/summarize-recent-reviews.ts"
   },
   "dependencies": {
     "@ai-sdk/openai": "^0.0.66",
@@ -38,7 +40,9 @@
     "eslint": "^8",
     "eslint-config-next": "14.2.13",
     "postcss": "^8",
+    "prettier": "^3.3.3",
     "tailwindcss": "^3.4.1",
+    "ts-node": "^10.9.2",
     "typescript": "^5"
   }
 }
