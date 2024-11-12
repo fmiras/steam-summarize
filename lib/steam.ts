@@ -80,7 +80,7 @@ function mapReview(steamReview: SteamReview) {
 export async function fetchReviews(appId: string, cursor = '*'): Promise<SteamApiReviewsResponse> {
   const url = `https://store.steampowered.com/appreviews/${appId}?json=1&cursor=${encodeURIComponent(
     cursor
-  )}&language=all`
+  )}&language=english`
   const response = await fetch(url)
   const data: SteamApiReviewsResponse = await response.json()
   return {

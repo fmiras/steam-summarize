@@ -4,7 +4,7 @@ import { fetchReviews } from '@/lib/steam'
 
 // curl -X POST http://localhost:3000/api/summarize -H "Content-Type: application/json" -d '{"gameId":"1091500"}'
 export async function POST(req: Request) {
-  const { gameId } = await req.json()
+  const { prompt: gameId } = await req.json()
 
   // Fetch reviews first
   let { reviews, cursor } = await fetchReviews(gameId)
@@ -22,7 +22,7 @@ export async function POST(req: Request) {
     messages: [
       {
         role: 'user',
-        content: `give me a summary for positive, negative and neutral separated by new lines, reviews are: ${reviews
+        content: `you're a professional game reviewer, give me a summary of this reviews: ${reviews
           .map((r) => r.review)
           .join('\n')}`,
       },
