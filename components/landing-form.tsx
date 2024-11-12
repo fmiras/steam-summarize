@@ -31,9 +31,9 @@ export function LandingForm() {
 
     setIsLoading(true)
     try {
-      await handleCompletionSubmit(e)
+      handleCompletionSubmit(e)
     } catch (err) {
-      setError('Failed to get game summary')
+      setError(`Failed to get game summary: ${err}`)
     } finally {
       setIsLoading(false)
     }

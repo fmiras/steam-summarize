@@ -7,7 +7,7 @@ export async function POST(req: Request) {
   const { prompt: gameId } = await req.json()
 
   // Fetch reviews first
-  let { reviews, cursor } = await fetchReviews(gameId)
+  const { reviews, cursor } = await fetchReviews(gameId)
 
   // Fetch up to 200 reviews
   while (reviews.length < 200 && cursor) {
