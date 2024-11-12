@@ -1,22 +1,32 @@
+import * as dotenv from 'dotenv'
+dotenv.config({ path: '.env.local' })
+
 import { openai } from '@ai-sdk/openai'
 import { streamText } from 'ai'
 import cliProgress from 'cli-progress'
 
-import { fetchReviews, SteamReview } from '../lib/steam'
+import { fetchReviews } from '../lib/steam.ts'
+import type { SteamReview } from '../lib/steam.ts'
 
 const GAME_ID = '1091500'
 const bar1 = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic)
 
+if (!process.env.OPENAI_API_KEY) {
+  throw new Error('OPENAI_API_KEY is not set')
+}
+
 async function summarizeAndOutput(reviews: SteamReview[]) {
   console.log('Generating summary...')
   const response = await streamText({
-    model: openai('gpt-4o'),
+    model: openai('gpt-4o-mini'),
     messages: [
       {
         role: 'user',
-        content: `give me a summary for positive, negative and neutral separated by new lines, reviews are: ${reviews}`
-      }
-    ]
+        content: `give me a summary for positive, negative and neutral separated by new lines, reviews are: ${reviews
+          .map((r) => r.review)
+          .join('\n')}`,
+      },
+    ],
   })
 
   let summary = ''

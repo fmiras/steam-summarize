@@ -56,7 +56,7 @@ function mapReview(steamReview: SteamReview) {
     steam_purchase,
     received_for_free,
     written_during_early_access,
-    playtime_at_review
+    playtime_at_review,
   } = steamReview
 
   return {
@@ -73,7 +73,7 @@ function mapReview(steamReview: SteamReview) {
     steam_purchase,
     received_for_free,
     written_during_early_access,
-    playtime_at_review
+    playtime_at_review,
   }
 }
 
@@ -85,6 +85,6 @@ export async function fetchReviews(appId: string, cursor = '*'): Promise<SteamAp
   const data: SteamApiReviewsResponse = await response.json()
   return {
     ...data,
-    reviews: data.reviews.map((review) => mapReview(review))
+    reviews: data.reviews.map((review) => mapReview(review)),
   }
 }
