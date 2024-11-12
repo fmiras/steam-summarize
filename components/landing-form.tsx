@@ -50,7 +50,7 @@ export function LandingForm() {
         </div>
         <form onSubmit={onSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="gameId" className="text-white">
+            <Label hidden htmlFor="gameId" className="text-white">
               Steam Game ID
             </Label>
             <Input
