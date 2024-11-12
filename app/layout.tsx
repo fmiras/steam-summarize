@@ -1,3 +1,4 @@
+import { Analytics } from '@vercel/analytics/react'
 import type { Metadata } from 'next'
 import localFont from 'next/font/local'
 import './globals.css'
@@ -5,27 +6,30 @@ import './globals.css'
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
   variable: '--font-geist-sans',
-  weight: '100 900'
+  weight: '100 900',
 })
 const geistMono = localFont({
   src: './fonts/GeistMonoVF.woff',
   variable: '--font-geist-mono',
-  weight: '100 900'
+  weight: '100 900',
 })
 
 export const metadata: Metadata = {
   title: 'Steam AI',
-  description: 'Summarize Steam reviews with AI'
+  description: 'Summarize Steam reviews with AI',
 }
 
 export default function RootLayout({
-  children
+  children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>{children}</body>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        {children}
+        <Analytics />
+      </body>
     </html>
   )
 }
