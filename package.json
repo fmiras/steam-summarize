@@ -2,12 +2,14 @@
   "name": "nextjs",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "sync-reviews": "ts-node scripts/sync-reviews.ts"
+    "sync-reviews": "node --experimental-strip-types scripts/sync-reviews.ts",
+    "summarize-recent-reviews": "node --experimental-strip-types scripts/summarize-recent-reviews.ts"
   },
   "dependencies": {
     "@ai-sdk/openai": "^0.0.72",
