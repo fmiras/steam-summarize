@@ -41,11 +41,11 @@ export function LandingForm() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 flex flex-col items-center justify-center p-4">
-      <div className="w-full max-w-md">
+      <div className="w-full max-w-lg">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-white mb-2">Steam AI</h1>
           <p className="text-gray-300">
-            Enter a Steam game ID to get an AI-powered summary of its reviews
+            Enter a Steam Game ID to get a summary of its latest 200 reviews
           </p>
         </div>
         <form onSubmit={onSubmit} className="space-y-4">
