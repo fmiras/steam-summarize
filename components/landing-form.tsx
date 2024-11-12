@@ -41,12 +41,15 @@ export function LandingForm() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 flex flex-col items-center justify-center p-4">
-      <div className="w-full max-w-lg">
+      <div className="w-full max-w-2xl">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-white mb-2">Steam AI</h1>
+          <h1 className="text-3xl font-bold text-white mb-2">Steam Summarize</h1>
           <p className="text-gray-300">
-            Enter a Steam Game ID to get a summary of its latest 200 reviews
+            Enter a Steam Game ID to get a AI-generated summary of its latest 200 reviews
           </p>
+          <span className="text-xs text-gray-400">(only english for now)</span>
+          <br />
+          <span className="text-xs text-gray-400">Powered by OpenAI and Steam API</span>
         </div>
         <form onSubmit={onSubmit} className="space-y-4">
           <div className="space-y-2">
