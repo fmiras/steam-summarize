@@ -34,20 +34,10 @@ export const metadata: Metadata = {
     title: 'Steam Game Review Summarizer | AI-Powered Analysis',
     description: 'Get instant AI-powered summaries of Steam game reviews',
   },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
-  },
   verification: {
     google: 'f9swlRJvAjMc_StIwPeniNQbM6pUFg7U2vnHELwgzrc',
   },
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://steamsummarize.com'),
 }
 
 export default function RootLayout({

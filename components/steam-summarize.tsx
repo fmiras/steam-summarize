@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, Suspense } from 'react'
 import { useCompletion } from 'ai/react'
 import { Search, Loader2, AlertCircle, ComputerIcon as SteamIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -18,7 +18,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useSearchParams, useRouter } from 'next/navigation'
 
-export function SteamSummarize() {
+function SteamSummarize() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const initialQuery = searchParams.get('q') || ''
@@ -246,3 +246,13 @@ export function SteamSummarize() {
     </div>
   )
 }
+
+function SteamSummarizeWrapper() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SteamSummarize />
+    </Suspense>
+  )
+}
+
+export { SteamSummarizeWrapper as SteamSummarize }

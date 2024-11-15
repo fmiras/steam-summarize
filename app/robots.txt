@@ -1,0 +1,15 @@
+# Group 1: Allow all good bots
+User-agent: *
+Allow: /
+Allow: /api/summarize
+
+# Sitemaps
+Sitemap: https://steamsummarize.com/sitemap.xml
+
+# Crawl-delay: 10
+
+# Disallow patterns
+Disallow: /private/
+Disallow: /_next/static/
+Disallow: /api/*
+Disallow: /*.json$
