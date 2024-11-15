@@ -58,7 +58,7 @@ function SteamSummarize() {
   ]
 
   return (
-    <div className="container mx-auto p-6 max-w-3xl min-h-screen flex flex-col justify-center">
+    <div className="container mx-auto p-6 max-w-4xl min-h-screen flex flex-col justify-center">
       <div className="space-y-8">
         <header className="text-center space-y-4">
           <div className="inline-flex items-center justify-center px-4 py-2 rounded-full bg-secondary">
@@ -76,7 +76,7 @@ function SteamSummarize() {
           </div>
         </header>
 
-        <section aria-label="Search">
+        <section aria-label="Search" className="max-w-2xl mx-auto">
           <h2 className="sr-only">Search for a game</h2>
           <form onSubmit={handleSearch}>
             <div className="relative">
@@ -138,7 +138,7 @@ function SteamSummarize() {
           </form>
         </section>
 
-        <div className="min-h-[400px]">
+        <div className="min-h-[400px] max-w-2xl mx-auto">
           <AnimatePresence mode="wait">
             {error && (
               <motion.section

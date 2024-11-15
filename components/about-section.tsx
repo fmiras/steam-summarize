@@ -4,7 +4,7 @@ export function AboutSection() {
       <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:32px_32px]" />
 
       <div className="container mx-auto px-4 py-24 relative z-10">
-        <div className="max-w-3xl mx-auto space-y-12">
+        <div className="max-w-2xl mx-auto space-y-12">
           <div className="space-y-4 text-center">
             <h2 className="text-4xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
               How It Works
