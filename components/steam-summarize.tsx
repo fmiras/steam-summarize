@@ -50,10 +50,10 @@ function SteamSummarize() {
   }
 
   const exampleQueries = [
-    { name: 'Cyberpunk 2077', id: '1091500' },
-    { name: 'God of War', id: '1517290' },
-    { name: 'Elden Ring', id: '1245620' },
-    { name: 'The Last of Us Part II', id: '887000' },
+    { name: 'Cyberpunk 2077' },
+    { name: 'God of War' },
+    { name: 'Elden Ring' },
+    { name: 'The Last of Us' },
   ]
 
   return (
@@ -112,7 +112,7 @@ function SteamSummarize() {
               <div className="flex flex-wrap gap-2">
                 {exampleQueries.map((game) => (
                   <Button
-                    key={game.id}
+                    key={game.name}
                     variant="ghost"
                     size="sm"
                     className="text-sm bg-secondary/20 hover:bg-primary/10 
