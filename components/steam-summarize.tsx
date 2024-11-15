@@ -51,9 +51,9 @@ function SteamSummarize() {
 
   const exampleQueries = [
     { name: 'Cyberpunk 2077', id: '1091500' },
-    { name: 'Deus Ex: Mankind Divided', id: '337000' },
-    { name: 'Ghostrunner', id: '1139900' },
-    { name: 'Shadowrun Returns', id: '234650' },
+    { name: 'God of War', id: '1517290' },
+    { name: 'Elden Ring', id: '1245620' },
+    { name: 'The Last of Us Part II', id: '887000' },
   ]
 
   return (
