@@ -1,7 +1,6 @@
 import { openai } from '@ai-sdk/openai'
 import { streamObject } from 'ai'
 import { fetchReviews, searchGame } from '@/lib/steam'
-import { z } from 'zod'
 import { reviewSchema } from './schema'
 
 // curl -X POST http://localhost:3000/api/summarize -H "Content-Type: application/json" -d '{"gameId":"1091500"}'
