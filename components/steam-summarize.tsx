@@ -5,14 +5,7 @@ import { useCompletion } from 'ai/react'
 import { Search, Loader2, AlertCircle, ComputerIcon as SteamIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { motion, AnimatePresence } from 'framer-motion'

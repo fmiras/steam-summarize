@@ -27,7 +27,7 @@ export function AboutSection() {
                 2. We fetch Steam reviews
               </h3>
               <p className="text-gray-300">
-                Using Steam's public API, we grab the most recent reviews
+                Using Steam{"'"}s public API, we grab the most recent reviews
               </p>
             </div>
 
@@ -40,7 +40,7 @@ export function AboutSection() {
           </div>
 
           <div className="text-center text-sm text-gray-400 bg-black/20 p-4 rounded-lg backdrop-blur">
-            <p>That's literally it. No data storage. No tracking. No BS.</p>
+            <p>That{"'"}s literally it. No data storage. No tracking. No BS.</p>
             <p className="mt-2 text-xs">Not affiliated with Steam or Valve Corporation.</p>
           </div>
         </div>
