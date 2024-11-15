@@ -88,3 +88,18 @@ export async function fetchReviews(appId: string, cursor = '*'): Promise<SteamAp
     reviews: data.reviews.map((review) => mapReview(review)),
   }
 }
+
+export async function searchGame(search: string): Promise<string> {
+  const url = `https://store.steampowered.com/api/storesearch/?term=${encodeURIComponent(
+    search
+  )}&l=english&cc=US`
+
+  const response = await fetch(url)
+  const data = await response.json()
+
+  if (!data.items || data.items.length === 0) {
+    throw new Error('No games found')
+  }
+
+  return data.items[0].id.toString()
+}

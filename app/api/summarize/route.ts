@@ -1,10 +1,14 @@
 import { openai } from '@ai-sdk/openai'
 import { streamText } from 'ai'
-import { fetchReviews } from '@/lib/steam'
+import { fetchReviews, searchGame } from '@/lib/steam'
 
 // curl -X POST http://localhost:3000/api/summarize -H "Content-Type: application/json" -d '{"gameId":"1091500"}'
 export async function POST(req: Request) {
-  const { prompt: gameId } = await req.json()
+  const { prompt: search } = await req.json()
+  let gameId = search.match(/^\d+$/)
+  if (!gameId) {
+    gameId = await searchGame(search)
+  }
 
   // Fetch reviews first
   const { reviews, cursor: firstCursor } = await fetchReviews(gameId)
