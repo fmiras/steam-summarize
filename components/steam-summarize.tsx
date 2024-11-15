@@ -70,10 +70,12 @@ function SteamSummarize() {
           <h1 className="text-5xl font-extrabold tracking-tight text-primary">
             Discover What Players Really Think
           </h1>
-          <h2 className="text-muted-foreground text-lg max-w-xl mx-auto [&]:m-0">
-            Get instant, AI-generated insights from thousands of Steam reviews. Find out if a game
-            is worth your time.
-          </h2>
+          <div className="flex justify-center">
+            <h2 className="text-muted-foreground text-lg max-w-xl [&]:m-0">
+              Get instant, AI-generated insights from thousands of Steam reviews. Find out if a game
+              is worth your time.
+            </h2>
+          </div>
         </header>
 
         <section aria-label="Search">
@@ -139,111 +141,114 @@ function SteamSummarize() {
           </form>
         </section>
 
-        <AnimatePresence mode="wait">
-          {error && (
-            <motion.section
-              aria-label="Error"
-              key="error"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.2 }}
-            >
-              <h2 className="sr-only">Error Message</h2>
-              <Alert variant="destructive" className="bg-destructive/10 border border-destructive">
-                <AlertCircle className="h-5 w-5 text-destructive" />
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
-            </motion.section>
-          )}
+        <div className="min-h-[400px]">
+          <AnimatePresence mode="wait">
+            {error && (
+              <motion.section
+                aria-label="Error"
+                key="error"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.2 }}
+              >
+                <h2 className="sr-only">Error Message</h2>
+                <Alert
+                  variant="destructive"
+                  className="bg-destructive/10 border border-destructive"
+                >
+                  <AlertCircle className="h-5 w-5 text-destructive" />
+                  <AlertDescription>{error}</AlertDescription>
+                </Alert>
+              </motion.section>
+            )}
 
-          {isLoading && (
-            <motion.section
-              aria-label="Loading"
-              key="loading"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.2 }}
-            >
-              <h2 className="sr-only">Loading Status</h2>
-              <Card className="bg-card border border-border shadow-neon">
-                <CardContent className="py-12">
-                  <div className="flex flex-col items-center justify-center space-y-4">
-                    <Loader2 className="h-10 w-10 animate-spin text-primary" />
-                    <p className="text-muted-foreground">Analyzing player reviews...</p>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.section>
-          )}
+            {isLoading && (
+              <motion.section
+                aria-label="Loading"
+                key="loading"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.2 }}
+              >
+                <h2 className="sr-only">Loading Status</h2>
+                <Card className="bg-card border border-border shadow-neon">
+                  <CardContent className="py-12">
+                    <div className="flex flex-col items-center justify-center space-y-4">
+                      <Loader2 className="h-10 w-10 animate-spin text-primary" />
+                      <p className="text-muted-foreground">Analyzing player reviews...</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.section>
+            )}
 
-          {completion && !isLoading && (
-            <motion.section
-              aria-label="Game Summary"
-              key="result"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.2 }}
-            >
-              <Card className="bg-card border border-border shadow-neon hover:border-primary transition-all duration-300">
-                <CardHeader className="flex flex-row items-center gap-4">
-                  <Avatar className="h-16 w-16 rounded-md">
-                    <AvatarImage
-                      src={`https://steamcdn-a.akamaihd.net/steam/apps/${input}/header.jpg`}
-                      className="object-cover"
-                      alt={input}
-                    />
-                    <AvatarFallback className="rounded-md bg-muted">
-                      <SteamIcon className="h-8 w-8 text-muted-foreground" />
-                    </AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <h2 className="text-2xl text-foreground [&]:m-0">{input}</h2>
-                    <h3 className="text-primary [&]:m-0">Community Review Summary</h3>
-                  </div>
-                </CardHeader>
-                <CardContent className="prose prose-invert">
-                  <p className="leading-7">{completion}</p>
-                </CardContent>
-                <CardFooter>
-                  <p className="text-sm text-muted-foreground">
-                    Summary generated using AI. Results may vary.
-                  </p>
-                </CardFooter>
-              </Card>
-            </motion.section>
-          )}
+            {completion && !isLoading && (
+              <motion.section
+                aria-label="Game Summary"
+                key="result"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.2 }}
+              >
+                <Card className="bg-card border border-border shadow-neon hover:border-primary transition-all duration-300">
+                  <CardHeader className="flex flex-row items-center gap-4">
+                    <Avatar className="h-16 w-16 rounded-md">
+                      <AvatarImage
+                        src={`https://steamcdn-a.akamaihd.net/steam/apps/${input}/header.jpg`}
+                        className="object-cover"
+                        alt={input}
+                      />
+                      <AvatarFallback className="rounded-md bg-muted">
+                        <SteamIcon className="h-8 w-8 text-muted-foreground" />
+                      </AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <h2 className="text-2xl text-foreground [&]:m-0">{input}</h2>
+                      <h3 className="text-primary [&]:m-0">Community Review Summary</h3>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="">
+                    <p className="leading-7">{completion}</p>
+                  </CardContent>
+                  <CardFooter>
+                    <p className="text-sm text-muted-foreground text-end w-full">
+                      Summary generated using AI. Results may vary.
+                    </p>
+                  </CardFooter>
+                </Card>
+              </motion.section>
+            )}
 
-          {!isLoading && !completion && !error && (
-            <motion.section
-              aria-label="Welcome"
-              key="welcome"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.2 }}
-            >
-              <Card className="bg-card border border-dashed border-border shadow-neon">
-                <CardContent className="py-14 space-y-6 text-center">
-                  <div className="bg-muted mx-auto w-20 h-20 rounded-full flex items-center justify-center">
-                    <SteamIcon className="h-10 w-10 text-muted-foreground" />
-                  </div>
-                  <div className="space-y-2">
-                    <h2 className="text-2xl font-semibold text-foreground [&]:m-0">
+            {!isLoading && !completion && !error && (
+              <motion.section
+                aria-label="Welcome"
+                key="welcome"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.2 }}
+              >
+                <Card className="bg-card border border-dashed border-border shadow-neon">
+                  <CardContent className="py-14 flex flex-col items-center text-center">
+                    <div className="bg-muted w-20 h-20 rounded-full flex items-center justify-center mb-6">
+                      <SteamIcon className="h-10 w-10 text-muted-foreground" />
+                    </div>
+                    <h2 className="text-2xl font-semibold text-foreground mb-2">
                       Start Your Search
                     </h2>
-                    <h3 className="text-muted-foreground max-w-md mx-auto [&]:m-0">
+                    <h3 className="text-muted-foreground max-w-md">
                       Type a game name above or try one of our suggestions to see what the Steam
                       community thinks.
                     </h3>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.section>
-          )}
-        </AnimatePresence>
+                  </CardContent>
+                </Card>
+              </motion.section>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
     </div>
   )
