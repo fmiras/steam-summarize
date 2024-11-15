@@ -17,7 +17,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { motion, AnimatePresence } from 'framer-motion'
 
-export function SteamReviewAi() {
+export function SteamSummarize() {
   const {
     completion,
     input,
@@ -56,7 +56,7 @@ export function SteamReviewAi() {
       <header className="text-center mb-8">
         <h1 className="text-3xl font-bold mb-2 flex items-center justify-center">
           <SteamIcon className="mr-2" />
-          Steam Review AI
+          Steam Summarize
         </h1>
         <p className="text-muted-foreground">Get AI-generated summaries of Steam game reviews</p>
       </header>
@@ -178,7 +178,7 @@ export function SteamReviewAi() {
             <Card className="w-full">
               <CardContent className="pt-6 text-center">
                 <SteamIcon className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
-                <h2 className="text-2xl font-semibold mb-2">Welcome to Steam Review AI</h2>
+                <h2 className="text-2xl font-semibold mb-2">Welcome to Steam Summarize</h2>
                 <p className="text-muted-foreground max-w-md mx-auto mb-4">
                   Enter a game title or Steam App ID above to get an AI-generated summary of player
                   reviews.

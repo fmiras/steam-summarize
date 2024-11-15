@@ -1,7 +1,5 @@
-import { SteamReviewAi } from '@/components/steam-review-ai'
+import { SteamSummarize } from '@/components/steam-summarize'
 
 export default function Home() {
-  // return <ReviewAnalysis />
-  // return <LandingForm />
-  return <SteamReviewAi />
+  return <SteamSummarize />
 }
