@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useCompletion } from 'ai/react'
-import { Search, Loader2, AlertCircle, ComputerIcon as SteamIcon, ChevronRight } from 'lucide-react'
+import { Search, Loader2, AlertCircle, ComputerIcon as SteamIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -43,6 +43,7 @@ export function SteamSummarize() {
     try {
       await handleCompletionSubmit(e)
     } catch (err) {
+      console.error(err)
       setError(`There was an error getting the game summary. Please try again.`)
     } finally {
       setIsLoading(false)
@@ -117,7 +118,10 @@ export function SteamSummarize() {
                     hover:shadow-[0_0_10px_rgba(0,255,150,0.2)]
                     transition-all duration-300"
                   onClick={(e) => {
-                    handleInputChange({ target: { value: game.name } } as any)
+                    const event = {
+                      target: { value: game.name },
+                    } as React.ChangeEvent<HTMLInputElement>
+                    handleInputChange(event)
                     handleSearch(e)
                   }}
                 >
