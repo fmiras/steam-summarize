@@ -54,6 +54,7 @@ function SteamSummarize() {
     { name: 'God of War' },
     { name: 'Elden Ring' },
     { name: 'The Last of Us' },
+    { name: 'Red Dead Redemption 2' },
   ]
 
   return (
@@ -102,14 +103,13 @@ function SteamSummarize() {
                 ) : (
                   <div className="flex items-center px-3">
                     <Search className="h-4 w-4 mr-2" />
-                    <span className="font-medium">Search</span>
+                    <span className="font-medium hidden sm:inline">Search</span>
                   </div>
                 )}
               </Button>
             </div>
             <div className="mt-4 flex items-center gap-3">
-              <span className="text-sm text-muted-foreground">Popular:</span>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2 w-full justify-center">
                 {exampleQueries.map((game) => (
                   <Button
                     key={game.name}

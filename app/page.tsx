@@ -34,7 +34,7 @@ export default function Home() {
       />
       <SteamSummarize />
       <AboutSection />
-      <footer className="fixed bottom-0 w-full py-4 text-center text-sm text-gray-500">
+      <footer className="bottom-0 w-full py-4 text-center text-sm text-gray-500 bg-black/20 p-4 rounded-lg backdrop-blur">
         Made with ❤️ by{' '}
         <a
           href="https://fmiras.com"
