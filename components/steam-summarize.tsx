@@ -16,8 +16,13 @@ import {
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useSearchParams, useRouter } from 'next/navigation'
 
 export function SteamSummarize() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const initialQuery = searchParams.get('q') || ''
+
   const {
     completion,
     input,
@@ -25,6 +30,7 @@ export function SteamSummarize() {
     handleSubmit: handleCompletionSubmit,
   } = useCompletion({
     api: '/api/summarize',
+    initialInput: initialQuery,
   })
 
   const [error, setError] = useState<string | null>(null)
@@ -38,6 +44,9 @@ export function SteamSummarize() {
       setError('Please enter a valid game title or Steam App ID')
       return
     }
+
+    const newUrl = `${window.location.pathname}?q=${encodeURIComponent(input.trim())}`
+    router.push(newUrl)
 
     setIsLoading(true)
     try {

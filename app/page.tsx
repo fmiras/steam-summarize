@@ -8,7 +8,7 @@ export default function Home() {
     name: 'Steam Summarize',
     applicationCategory: 'GameReviewTool',
     description:
-      'AI-powered tool that analyzes and summarizes Steam game reviews to help players make informed gaming decisions.',
+      'AI-powered tool that analyzes and summarizes Steam reviews to help players make informed gaming decisions.',
     operatingSystem: 'Any',
     offers: {
       '@type': 'Offer',
@@ -32,6 +32,17 @@ export default function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
       <SteamSummarize />
+      <footer className="fixed bottom-0 w-full py-4 text-center text-sm text-gray-500">
+        Made with ❤️ by{' '}
+        <a
+          href="https://fmiras.com"
+          className="hover:text-gray-700 underline"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          fefo
+        </a>
+      </footer>
     </>
   )
 }
