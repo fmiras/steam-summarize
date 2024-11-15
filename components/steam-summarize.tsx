@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, Suspense } from 'react'
-import { useCompletion } from 'ai/react'
+import { experimental_useObject as useObject } from 'ai/react'
 import { Search, Loader2, AlertCircle, ComputerIcon as SteamIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -10,24 +10,24 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useSearchParams, useRouter } from 'next/navigation'
+import { reviewSchema } from '@/app/api/summarize/schema'
 
 function SteamSummarize() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const initialQuery = searchParams.get('q') || ''
 
-  const {
-    completion,
-    input,
-    handleInputChange,
-    handleSubmit: handleCompletionSubmit,
-  } = useCompletion({
+  const [input, setInput] = useState(initialQuery)
+  const { object, isLoading, submit } = useObject({
     api: '/api/summarize',
-    initialInput: initialQuery,
+    schema: reviewSchema,
   })
 
   const [error, setError] = useState<string | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInput(e.target.value)
+  }
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -41,14 +41,11 @@ function SteamSummarize() {
     const newUrl = `${window.location.pathname}?q=${encodeURIComponent(input.trim())}`
     router.push(newUrl)
 
-    setIsLoading(true)
     try {
-      await handleCompletionSubmit(e)
+      await submit({ prompt: input.trim() })
     } catch (err) {
       console.error(err)
       setError(`There was an error getting the game summary. Please try again.`)
-    } finally {
-      setIsLoading(false)
     }
   }
 
@@ -184,7 +181,7 @@ function SteamSummarize() {
               </motion.section>
             )}
 
-            {completion && !isLoading && (
+            {object && !isLoading && (
               <motion.section
                 aria-label="Game Summary"
                 key="result"
@@ -210,8 +207,30 @@ function SteamSummarize() {
                       <h3 className="text-primary [&]:m-0">Community Review Summary</h3>
                     </div>
                   </CardHeader>
-                  <CardContent className="">
-                    <p className="leading-7">{completion}</p>
+                  <CardContent>
+                    <p className="leading-7 mb-4">{object.summary?.overall}</p>
+                    <div className="space-y-4">
+                      <div>
+                        <h4 className="font-semibold text-primary">Pros:</h4>
+                        <ul className="list-disc pl-5">
+                          {object.summary?.pros?.map((pro, i) => (
+                            <li key={i}>{pro}</li>
+                          ))}
+                        </ul>
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-primary">Cons:</h4>
+                        <ul className="list-disc pl-5">
+                          {object.summary?.cons?.map((con, i) => (
+                            <li key={i}>{con}</li>
+                          ))}
+                        </ul>
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-primary">Recommendation:</h4>
+                        <p>{object.summary?.recommendation}</p>
+                      </div>
+                    </div>
                   </CardContent>
                   <CardFooter>
                     <p className="text-sm text-muted-foreground text-end w-full">
@@ -222,7 +241,7 @@ function SteamSummarize() {
               </motion.section>
             )}
 
-            {!isLoading && !completion && !error && (
+            {!isLoading && !object && !error && (
               <motion.section
                 aria-label="Welcome"
                 key="welcome"

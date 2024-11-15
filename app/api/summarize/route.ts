@@ -1,6 +1,8 @@
 import { openai } from '@ai-sdk/openai'
-import { streamText } from 'ai'
+import { streamObject } from 'ai'
 import { fetchReviews, searchGame } from '@/lib/steam'
+import { z } from 'zod'
+import { reviewSchema } from './schema'
 
 // curl -X POST http://localhost:3000/api/summarize -H "Content-Type: application/json" -d '{"gameId":"1091500"}'
 export async function POST(req: Request) {
@@ -22,17 +24,18 @@ export async function POST(req: Request) {
   }
 
   // Create the streaming response
-  const result = await streamText({
+  const result = await streamObject({
     model: openai('gpt-4o-mini'),
+    schema: reviewSchema,
     messages: [
       {
         role: 'user',
-        content: `you're a professional game reviewer, give me a summary of this reviews: ${reviews
+        content: `You're a professional game reviewer. Analyze these Steam reviews and provide a structured summary: ${reviews
           .map((r) => r.review)
           .join('\n')}`,
       },
     ],
   })
 
-  return result.toDataStreamResponse()
+  return result.toTextStreamResponse()
 }
