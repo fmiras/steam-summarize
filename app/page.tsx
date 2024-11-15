@@ -1,4 +1,5 @@
 import { SteamSummarize } from '@/components/steam-summarize'
+import { AboutSection } from '@/components/about-section'
 import Script from 'next/script'
 
 export default function Home() {
@@ -32,6 +33,7 @@ export default function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
       <SteamSummarize />
+      <AboutSection />
       <footer className="fixed bottom-0 w-full py-4 text-center text-sm text-gray-500">
         Made with ❤️ by{' '}
         <a
