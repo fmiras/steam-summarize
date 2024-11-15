@@ -1,4 +1,5 @@
 import { Analytics } from '@vercel/analytics/react'
+import { GoogleAnalytics } from '@next/third-parties/google'
 import type { Metadata } from 'next'
 import localFont from 'next/font/local'
 import './globals.css'
@@ -15,8 +16,37 @@ const geistMono = localFont({
 })
 
 export const metadata: Metadata = {
-  title: 'Steam AI',
-  description: 'Summarize Steam reviews with AI',
+  title: 'Steam Summarize | AI-Powered Game Reviews Analysis',
+  description:
+    'Get instant AI-powered summaries of Steam game reviews. Make informed gaming decisions with our smart analysis of player feedback, ratings, and reviews from Steam.',
+  keywords:
+    'steam reviews, game reviews, steam game analysis, game review summary, steam review analyzer, video game reviews, gaming recommendations, steam review summary, game review AI, steam game ratings',
+  openGraph: {
+    title: 'Steam Game Review Summarizer | AI-Powered Game Reviews Analysis',
+    description:
+      'Get instant AI-powered summaries of Steam game reviews. Make informed gaming decisions with our smart analysis of player feedback.',
+    type: 'website',
+    locale: 'en_US',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Steam Game Review Summarizer | AI-Powered Analysis',
+    description: 'Get instant AI-powered summaries of Steam game reviews',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  verification: {
+    google: 'f9swlRJvAjMc_StIwPeniNQbM6pUFg7U2vnHELwgzrc',
+  },
 }
 
 export default function RootLayout({
@@ -26,10 +56,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="canonical" href="https://steamsummarize.com" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         {children}
         <Analytics />
       </body>
+      <GoogleAnalytics gaId="GTM-TL4WVVJB" />
     </html>
   )
 }

@@ -34,7 +34,7 @@ export function SteamSummarize() {
     e.preventDefault()
     setError(null)
 
-    if (!input.trim()) {
+    if (!input?.trim()) {
       setError('Please enter a valid game title or Steam App ID')
       return
     }
@@ -117,12 +117,14 @@ export function SteamSummarize() {
                     border border-primary/20 hover:border-primary/50
                     hover:shadow-[0_0_10px_rgba(0,255,150,0.2)]
                     transition-all duration-300"
-                  onClick={(e) => {
-                    const event = {
+                  onClick={() => {
+                    handleInputChange({
                       target: { value: game.name },
-                    } as React.ChangeEvent<HTMLInputElement>
-                    handleInputChange(event)
-                    handleSearch(e)
+                    } as React.ChangeEvent<HTMLInputElement>)
+                    const syntheticEvent = {
+                      preventDefault: () => {},
+                    } as React.FormEvent
+                    handleSearch(syntheticEvent)
                   }}
                 >
                   {game.name}
