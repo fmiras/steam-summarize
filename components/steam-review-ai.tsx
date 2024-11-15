@@ -1,39 +1,55 @@
 'use client'
 
 import { useState } from 'react'
+import { useCompletion } from 'ai/react'
 import { Search, Loader2, AlertCircle, ComputerIcon as SteamIcon, ChevronRight } from 'lucide-react'
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { motion, AnimatePresence } from "framer-motion"
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { motion, AnimatePresence } from 'framer-motion'
 
 export function SteamReviewAi() {
-  const [query, setQuery] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-  const [result, setResult] = useState(null)
+  const {
+    completion,
+    input,
+    handleInputChange,
+    handleSubmit: handleCompletionSubmit,
+  } = useCompletion({
+    api: '/api/summarize',
+  })
 
-  const handleSearch = async (searchQuery) => {
-    if (!searchQuery.trim()) return
-    setQuery(searchQuery)
+  const [error, setError] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
+
+  const handleSearch = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setError(null)
+
+    if (!input.trim()) {
+      setError('Please enter a valid game title or Steam App ID')
+      return
+    }
+
     setIsLoading(true)
-    setResult(null)
-    // Simulating API call
-    await new Promise(resolve => setTimeout(resolve, 2000))
-    setResult({
-      title: searchQuery,
-      summary: `This is an AI-generated summary for ${searchQuery}. The game has received mixed reviews from players. Many praise its innovative gameplay mechanics and stunning visuals, while others have reported performance issues and bugs. Overall, it seems to be a polarizing title that appeals to fans of the genre but may not be for everyone.`
-    })
-    setIsLoading(false)
+    try {
+      await handleCompletionSubmit(e)
+    } catch (err) {
+      setError(`There was an error getting the game summary. Please try again.`)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
-  const exampleQueries = [
-    "Elden Ring",
-    "Stardew Valley",
-    "Cyberpunk 2077",
-    "Hades"
-  ]
+  const exampleQueries = ['Elden Ring', 'Stardew Valley', 'Cyberpunk 2077', 'Hades']
 
   return (
     <div className="container mx-auto p-4 max-w-3xl">
@@ -49,21 +65,26 @@ export function SteamReviewAi() {
         <AlertCircle className="h-4 w-4" />
         <AlertTitle>Beta Version</AlertTitle>
         <AlertDescription>
-          This tool is in beta and supports English reviews only. It uses Generative AI (GPT + Steam API).
+          This tool is in beta and supports English reviews only. It uses Generative AI (GPT + Steam
+          API).
         </AlertDescription>
       </Alert>
 
-      <form onSubmit={(e) => { e.preventDefault(); handleSearch(query); }} className="mb-6">
+      <form onSubmit={handleSearch} className="mb-6">
         <div className="flex gap-2">
           <Input
             type="text"
             placeholder="Enter game title or Steam App ID"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            value={input}
+            onChange={handleInputChange}
             className="flex-grow"
           />
           <Button type="submit" disabled={isLoading}>
-            {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Search className="mr-2 h-4 w-4" />}
+            {isLoading ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              <Search className="mr-2 h-4 w-4" />
+            )}
             Search
           </Button>
         </div>
@@ -73,7 +94,15 @@ export function SteamReviewAi() {
         <p className="text-sm text-muted-foreground mb-2">Try an example:</p>
         <div className="flex flex-wrap gap-2">
           {exampleQueries.map((eq) => (
-            <Button key={eq} variant="outline" size="sm" onClick={() => handleSearch(eq)}>
+            <Button
+              key={eq}
+              variant="outline"
+              size="sm"
+              onClick={(e) => {
+                handleInputChange({ target: { value: eq } } as any)
+                handleSearch(e)
+              }}
+            >
               {eq}
             </Button>
           ))}
@@ -100,7 +129,7 @@ export function SteamReviewAi() {
           </motion.div>
         )}
 
-        {result && !isLoading && (
+        {completion && !isLoading && (
           <motion.div
             key="result"
             initial={{ opacity: 0, y: 20 }}
@@ -111,16 +140,23 @@ export function SteamReviewAi() {
             <Card className="w-full">
               <CardHeader className="flex flex-row items-center gap-4">
                 <Avatar className="h-14 w-14">
-                  <AvatarImage src={`https://steamcdn-a.akamaihd.net/steam/apps/${query}/header.jpg`} alt={result.title} />
-                  <AvatarFallback><SteamIcon className="h-8 w-8" /></AvatarFallback>
+                  <AvatarImage
+                    src={`https://steamcdn-a.akamaihd.net/steam/apps/${input}/header.jpg`}
+                    // image looks better when it's cropped
+                    className="object-cover"
+                    alt={input}
+                  />
+                  <AvatarFallback>
+                    <SteamIcon className="h-8 w-8" />
+                  </AvatarFallback>
                 </Avatar>
                 <div>
-                  <CardTitle className="text-2xl">{result.title}</CardTitle>
+                  <CardTitle className="text-2xl">{input}</CardTitle>
                   <CardDescription>AI-Generated Review Summary</CardDescription>
                 </div>
               </CardHeader>
               <CardContent>
-                <p className="leading-7">{result.summary}</p>
+                <p className="leading-7">{completion}</p>
               </CardContent>
               <CardFooter>
                 <p className="text-sm text-muted-foreground">
@@ -131,7 +167,7 @@ export function SteamReviewAi() {
           </motion.div>
         )}
 
-        {!isLoading && !result && (
+        {!isLoading && !completion && (
           <motion.div
             key="welcome"
             initial={{ opacity: 0, y: 20 }}
@@ -144,7 +180,8 @@ export function SteamReviewAi() {
                 <SteamIcon className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
                 <h2 className="text-2xl font-semibold mb-2">Welcome to Steam Review AI</h2>
                 <p className="text-muted-foreground max-w-md mx-auto mb-4">
-                  Enter a game title or Steam App ID above to get an AI-generated summary of player reviews.
+                  Enter a game title or Steam App ID above to get an AI-generated summary of player
+                  reviews.
                 </p>
                 <Button variant="outline" onClick={() => document.querySelector('input').focus()}>
                   Start Searching <ChevronRight className="ml-2 h-4 w-4" />
