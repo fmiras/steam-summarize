@@ -72,101 +72,108 @@ function SteamSummarize() {
         <header className="text-center space-y-4">
           <div className="inline-flex items-center justify-center px-4 py-2 rounded-full bg-secondary">
             <SteamIcon className="w-5 h-5 mr-2 text-primary animate-pulse" />
-            <span className="text-sm font-medium text-primary">Powered by Steam + AI</span>
+            <h2 className="text-sm font-medium text-primary [&]:m-0">Powered by Steam + AI</h2>
           </div>
           <h1 className="text-5xl font-extrabold tracking-tight text-primary">
             Discover What Players Really Think
           </h1>
-          <p className="text-muted-foreground text-lg max-w-xl mx-auto">
+          <h2 className="text-muted-foreground text-lg max-w-xl mx-auto [&]:m-0">
             Get instant, AI-generated insights from thousands of Steam reviews. Find out if a game
             is worth your time.
-          </p>
+          </h2>
         </header>
 
-        <form onSubmit={handleSearch}>
-          <div className="relative">
-            <Input
-              type="text"
-              placeholder="Search any game on Steam..."
-              value={input}
-              onChange={handleInputChange}
-              className="w-full text-lg py-6 pr-24 bg-card/50 border-border/50 rounded-lg
-                focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all duration-300
-                text-foreground placeholder-muted-foreground backdrop-blur-sm"
-            />
-            <Button
-              type="submit"
-              className="absolute right-2 top-1/2 -translate-y-1/2 h-10 
-                bg-primary/20 hover:bg-primary/30 text-primary hover:text-primary 
-                border border-primary/50 hover:border-primary
-                hover:shadow-[0_0_15px_rgba(0,255,150,0.3)]
-                transition-all duration-300 rounded-lg backdrop-blur-sm"
-              disabled={isLoading}
-            >
-              {isLoading ? (
-                <Loader2 className="h-5 w-5 animate-spin" />
-              ) : (
-                <div className="flex items-center px-3">
-                  <Search className="h-4 w-4 mr-2" />
-                  <span className="font-medium">Search</span>
-                </div>
-              )}
-            </Button>
-          </div>
-          <div className="mt-4 flex items-center gap-3">
-            <span className="text-sm text-muted-foreground">Popular:</span>
-            <div className="flex flex-wrap gap-2">
-              {exampleQueries.map((game) => (
-                <Button
-                  key={game.id}
-                  variant="ghost"
-                  size="sm"
-                  className="text-sm bg-secondary/20 hover:bg-primary/10 
-                    text-primary hover:text-primary
-                    border border-primary/20 hover:border-primary/50
-                    hover:shadow-[0_0_10px_rgba(0,255,150,0.2)]
-                    transition-all duration-300"
-                  onClick={() => {
-                    handleInputChange({
-                      target: { value: game.name },
-                    } as React.ChangeEvent<HTMLInputElement>)
-                    const syntheticEvent = {
-                      preventDefault: () => {},
-                    } as React.FormEvent
-                    handleSearch(syntheticEvent)
-                  }}
-                >
-                  {game.name}
-                </Button>
-              ))}
+        <section aria-label="Search">
+          <h2 className="sr-only">Search for a game</h2>
+          <form onSubmit={handleSearch}>
+            <div className="relative">
+              <Input
+                type="text"
+                placeholder="Search any game on Steam..."
+                value={input}
+                onChange={handleInputChange}
+                className="w-full text-lg py-6 pr-24 bg-card/50 border-border/50 rounded-lg
+                  focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all duration-300
+                  text-foreground placeholder-muted-foreground backdrop-blur-sm"
+              />
+              <Button
+                type="submit"
+                className="absolute right-2 top-1/2 -translate-y-1/2 h-10 
+                  bg-primary/20 hover:bg-primary/30 text-primary hover:text-primary 
+                  border border-primary/50 hover:border-primary
+                  hover:shadow-[0_0_15px_rgba(0,255,150,0.3)]
+                  transition-all duration-300 rounded-lg backdrop-blur-sm"
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <Loader2 className="h-5 w-5 animate-spin" />
+                ) : (
+                  <div className="flex items-center px-3">
+                    <Search className="h-4 w-4 mr-2" />
+                    <span className="font-medium">Search</span>
+                  </div>
+                )}
+              </Button>
             </div>
-          </div>
-        </form>
+            <div className="mt-4 flex items-center gap-3">
+              <span className="text-sm text-muted-foreground">Popular:</span>
+              <div className="flex flex-wrap gap-2">
+                {exampleQueries.map((game) => (
+                  <Button
+                    key={game.id}
+                    variant="ghost"
+                    size="sm"
+                    className="text-sm bg-secondary/20 hover:bg-primary/10 
+                      text-primary hover:text-primary
+                      border border-primary/20 hover:border-primary/50
+                      hover:shadow-[0_0_10px_rgba(0,255,150,0.2)]
+                      transition-all duration-300"
+                    onClick={() => {
+                      handleInputChange({
+                        target: { value: game.name },
+                      } as React.ChangeEvent<HTMLInputElement>)
+                      const syntheticEvent = {
+                        preventDefault: () => {},
+                      } as React.FormEvent
+                      handleSearch(syntheticEvent)
+                    }}
+                  >
+                    {game.name}
+                  </Button>
+                ))}
+              </div>
+            </div>
+          </form>
+        </section>
 
         <AnimatePresence mode="wait">
           {error && (
-            <motion.div
+            <motion.section
+              aria-label="Error"
               key="error"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.2 }}
             >
+              <h2 className="sr-only">Error Message</h2>
               <Alert variant="destructive" className="bg-destructive/10 border border-destructive">
                 <AlertCircle className="h-5 w-5 text-destructive" />
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
-            </motion.div>
+            </motion.section>
           )}
 
           {isLoading && (
-            <motion.div
+            <motion.section
+              aria-label="Loading"
               key="loading"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.2 }}
             >
+              <h2 className="sr-only">Loading Status</h2>
               <Card className="bg-card border border-border shadow-neon">
                 <CardContent className="py-12">
                   <div className="flex flex-col items-center justify-center space-y-4">
@@ -175,11 +182,12 @@ function SteamSummarize() {
                   </div>
                 </CardContent>
               </Card>
-            </motion.div>
+            </motion.section>
           )}
 
           {completion && !isLoading && (
-            <motion.div
+            <motion.section
+              aria-label="Game Summary"
               key="result"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -199,10 +207,8 @@ function SteamSummarize() {
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <CardTitle className="text-2xl text-foreground">{input}</CardTitle>
-                    <CardDescription className="text-primary">
-                      Community Review Summary
-                    </CardDescription>
+                    <h2 className="text-2xl text-foreground [&]:m-0">{input}</h2>
+                    <h3 className="text-primary [&]:m-0">Community Review Summary</h3>
                   </div>
                 </CardHeader>
                 <CardContent className="prose prose-invert">
@@ -214,11 +220,12 @@ function SteamSummarize() {
                   </p>
                 </CardFooter>
               </Card>
-            </motion.div>
+            </motion.section>
           )}
 
           {!isLoading && !completion && !error && (
-            <motion.div
+            <motion.section
+              aria-label="Welcome"
               key="welcome"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -231,15 +238,17 @@ function SteamSummarize() {
                     <SteamIcon className="h-10 w-10 text-muted-foreground" />
                   </div>
                   <div className="space-y-2">
-                    <h2 className="text-2xl font-semibold text-foreground">Start Your Search</h2>
-                    <p className="text-muted-foreground max-w-md mx-auto">
+                    <h2 className="text-2xl font-semibold text-foreground [&]:m-0">
+                      Start Your Search
+                    </h2>
+                    <h3 className="text-muted-foreground max-w-md mx-auto [&]:m-0">
                       Type a game name above or try one of our suggestions to see what the Steam
                       community thinks.
-                    </p>
+                    </h3>
                   </div>
                 </CardContent>
               </Card>
-            </motion.div>
+            </motion.section>
           )}
         </AnimatePresence>
       </div>

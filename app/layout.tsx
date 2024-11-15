@@ -19,7 +19,7 @@ const geistMono = localFont({
 export const metadata: Metadata = {
   title: 'Steam Summarize | AI-Powered Game Reviews Analysis',
   description:
-    'Get instant AI-powered summaries of Steam game reviews. Make informed gaming decisions with our smart analysis of player feedback, ratings, and reviews from Steam.',
+    'Get instant AI-powered summaries of Steam reviews. Make informed gaming decisions with our smart analysis of player feedback, ratings, and reviews from Steam.',
   keywords:
     'steam reviews, game reviews, steam game analysis, game review summary, steam review analyzer, video game reviews, gaming recommendations, steam review summary, game review AI, steam game ratings',
   openGraph: {
