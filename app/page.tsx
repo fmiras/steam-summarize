@@ -2,7 +2,13 @@ import { SteamSummarize } from '@/components/steam-summarize'
 import { AboutSection } from '@/components/about-section'
 import Script from 'next/script'
 
-export default function Home() {
+interface HomeProps {
+  searchParams: { [key: string]: string | string[] | undefined }
+}
+
+export default function Home({ searchParams }: HomeProps) {
+  const query = typeof searchParams.q === 'string' ? searchParams.q : ''
+
   const structuredData = {
     '@context': 'https://schema.org',
     '@type': 'WebApplication',
@@ -32,7 +38,7 @@ export default function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
-      <SteamSummarize />
+      <SteamSummarize initialQuery={query} />
       <AboutSection />
       <footer className="bottom-0 w-full py-4 text-center text-sm text-gray-500 bg-black/20 p-4 rounded-lg backdrop-blur">
         Made with ❤️ by{' '}

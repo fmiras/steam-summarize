@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, Suspense } from 'react'
+import { useState, Suspense, useEffect } from 'react'
 import { experimental_useObject as useObject } from 'ai/react'
 import { Search, Loader2, AlertCircle, ComputerIcon as SteamIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -9,15 +9,29 @@ import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useSearchParams, useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { reviewSchema } from '@/app/api/summarize/schema'
 
-function SteamSummarize() {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const initialQuery = searchParams.get('q') || ''
+interface SteamSummarizeProps {
+  initialQuery?: string
+}
 
+function SteamSummarize({ initialQuery = '' }: SteamSummarizeProps) {
+  const router = useRouter()
   const [input, setInput] = useState(initialQuery)
+  const [initialLoad, setInitialLoad] = useState(true)
+
+  useEffect(() => {
+    if (initialLoad && initialQuery) {
+      const syntheticEvent = {
+        preventDefault: () => {},
+      } as React.FormEvent
+
+      setInput(initialQuery)
+      handleSearch(syntheticEvent)
+      setInitialLoad(false)
+    }
+  }, [initialQuery]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const { object, isLoading, submit } = useObject({
     api: '/api/summarize',
@@ -308,10 +322,10 @@ function SteamSummarize() {
   )
 }
 
-function SteamSummarizeWrapper() {
+function SteamSummarizeWrapper(props: SteamSummarizeProps) {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <SteamSummarize />
+      <SteamSummarize {...props} />
     </Suspense>
   )
 }
