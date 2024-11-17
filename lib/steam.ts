@@ -1,33 +1,5 @@
-import { gameSchema } from '@/app/api/game/schema'
-
-export interface SteamReview {
-  recommendationid: string
-  language: string
-  review: string
-  timestamp_created: number
-  timestamp_updated: number
-  voted_up: boolean
-  votes_up: number
-  votes_funny: number
-  weighted_vote_score: number
-  comment_count: number
-  steam_purchase: boolean
-  received_for_free: boolean
-  written_during_early_access: boolean
-  playtime_at_review: number
-
-  // // These fields are not used in the script
-  // author?: {
-  //   steamid: string
-  //   num_games_owned: number
-  //   num_reviews: number
-  //   playtime_forever: number
-  //   playtime_last_two_weeks: number
-  //   last_played: number
-  // }
-  // hidden_in_steam_china?: boolean
-  // primarily_steam_deck?: boolean
-}
+import { Game } from '@/app/api/game/schema'
+import { Review } from '@/app/api/reviews/schema'
 
 interface SteamApiReviewsResponse {
   success: number
@@ -39,11 +11,11 @@ interface SteamApiReviewsResponse {
     total_negative: number
     total_reviews: number
   }
-  reviews: SteamReview[]
+  reviews: Review[]
   cursor: string
 }
 
-function mapReview(steamReview: SteamReview) {
+function mapReview(steamReview: Review) {
   const {
     recommendationid,
     language,
@@ -91,7 +63,7 @@ export async function fetchReviews(appId: string, cursor = '*'): Promise<SteamAp
   }
 }
 
-export async function searchGame(search: string): Promise<typeof gameSchema._type> {
+export async function searchGame(search: string): Promise<Game> {
   const url = `https://store.steampowered.com/api/storesearch/?term=${encodeURIComponent(
     search
   )}&l=english&cc=US`

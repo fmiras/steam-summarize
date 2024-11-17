@@ -6,7 +6,8 @@ import { summarySchema } from './schema'
 // curl -X POST http://localhost:3000/api/summary -H "Content-Type: application/json" -d '{"prompt":"The Last of Us"}'
 export async function POST(req: Request) {
   const { prompt: search } = await req.json()
-  let gameId = search.match(/^\d+$/)
+
+  let gameId: string | null = search.match(/^\d+$/)?.[0] ?? null
   if (!gameId) {
     const game = await searchGame(search)
     gameId = game.id
