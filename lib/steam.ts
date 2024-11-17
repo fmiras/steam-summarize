@@ -1,3 +1,5 @@
+import { gameSchema } from '@/app/api/game/schema'
+
 export interface SteamReview {
   recommendationid: string
   language: string
@@ -89,7 +91,7 @@ export async function fetchReviews(appId: string, cursor = '*'): Promise<SteamAp
   }
 }
 
-export async function searchGame(search: string): Promise<string> {
+export async function searchGame(search: string): Promise<typeof gameSchema._type> {
   const url = `https://store.steampowered.com/api/storesearch/?term=${encodeURIComponent(
     search
   )}&l=english&cc=US`
@@ -101,5 +103,5 @@ export async function searchGame(search: string): Promise<string> {
     throw new Error('No games found')
   }
 
-  return data.items[0].id.toString()
+  return data.items[0]
 }

@@ -10,11 +10,47 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useRouter } from 'next/navigation'
-import { reviewSchema } from '@/app/api/summarize/schema'
+import { summarySchema } from '@/app/api/summary/schema'
 
 interface SteamSummarizeProps {
   initialQuery?: string
 }
+
+const CARDS = [
+  {
+    id: 0,
+    name: 'Manu Arora',
+    designation: 'Senior Software Engineer',
+    content: (
+      <p>
+        These cards are amazing, I want to use them in my project. Framer motion is a godsend ngl
+        tbh fam 🙏
+      </p>
+    ),
+  },
+  {
+    id: 1,
+    name: 'Elon Musk',
+    designation: 'Senior Shitposter',
+    content: (
+      <p>
+        I dont like this Twitter thing, deleting it right away because yolo. Instead, I would like
+        to call it X.com so that it can easily be confused with adult sites.
+      </p>
+    ),
+  },
+  {
+    id: 2,
+    name: 'Tyler Durden',
+    designation: 'Manager Project Mayhem',
+    content: (
+      <p>
+        The first rule of Fight Club is that you do not talk about fight club. The second rule of
+        Fight club is that you DO NOT TALK about fight club.
+      </p>
+    ),
+  },
+]
 
 function SteamSummarize({ initialQuery = '' }: SteamSummarizeProps) {
   const router = useRouter()
@@ -34,8 +70,8 @@ function SteamSummarize({ initialQuery = '' }: SteamSummarizeProps) {
   }, [initialQuery]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const { object, isLoading, submit } = useObject({
-    api: '/api/summarize',
-    schema: reviewSchema,
+    api: '/api/summary',
+    schema: summarySchema,
   })
 
   const [error, setError] = useState<string | null>(null)
@@ -250,7 +286,7 @@ function SteamSummarize({ initialQuery = '' }: SteamSummarizeProps) {
                           </a>
                         </div>
                         <ul className="list-disc pl-5">
-                          {object.summary?.pros?.map((pro, i) => (
+                          {object?.pros?.map((pro, i) => (
                             <li key={i}>{pro}</li>
                           ))}
                         </ul>
@@ -268,7 +304,7 @@ function SteamSummarize({ initialQuery = '' }: SteamSummarizeProps) {
                           </a>
                         </div>
                         <ul className="list-disc pl-5">
-                          {object.summary?.cons?.map((con, i) => (
+                          {object?.cons?.map((con, i) => (
                             <li key={i}>{con}</li>
                           ))}
                         </ul>
@@ -277,7 +313,7 @@ function SteamSummarize({ initialQuery = '' }: SteamSummarizeProps) {
                         <div className="flex items-center gap-2 w-full">
                           <h4 className="font-semibold text-primary">Recommendation</h4>
                         </div>
-                        <p>{object.summary?.recommendation}</p>
+                        <p>{object?.recommendation}</p>
                       </div>
                     </div>
                   </CardContent>

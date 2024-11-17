@@ -1,14 +1,15 @@
 import { openai } from '@ai-sdk/openai'
 import { streamObject } from 'ai'
 import { fetchReviews, searchGame } from '@/lib/steam'
-import { reviewSchema } from './schema'
+import { summarySchema } from './schema'
 
-// curl -X POST http://localhost:3000/api/summarize -H "Content-Type: application/json" -d '{"gameId":"1091500"}'
+// curl -X POST http://localhost:3000/api/summary -H "Content-Type: application/json" -d '{"prompt":"The Last of Us"}'
 export async function POST(req: Request) {
   const { prompt: search } = await req.json()
   let gameId = search.match(/^\d+$/)
   if (!gameId) {
-    gameId = await searchGame(search)
+    const game = await searchGame(search)
+    gameId = game.id
   }
 
   // Fetch reviews first
@@ -25,7 +26,7 @@ export async function POST(req: Request) {
   // Create the streaming response
   const result = await streamObject({
     model: openai('gpt-4o-mini'),
-    schema: reviewSchema,
+    schema: summarySchema,
     messages: [
       {
         role: 'user',
