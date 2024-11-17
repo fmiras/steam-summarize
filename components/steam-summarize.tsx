@@ -18,6 +18,7 @@ function SteamSummarize() {
   const initialQuery = searchParams.get('q') || ''
 
   const [input, setInput] = useState(initialQuery)
+
   const { object, isLoading, submit } = useObject({
     api: '/api/summarize',
     schema: reviewSchema,
@@ -191,27 +192,49 @@ function SteamSummarize() {
                 transition={{ duration: 0.2 }}
               >
                 <Card className="bg-card border border-border shadow-neon hover:border-primary transition-all duration-300">
-                  <CardHeader className="flex flex-row items-center gap-4">
-                    <Avatar className="h-16 w-16 rounded-md">
-                      <AvatarImage
-                        src={`https://steamcdn-a.akamaihd.net/steam/apps/${input}/header.jpg`}
-                        className="object-cover"
-                        alt={input}
-                      />
-                      <AvatarFallback className="rounded-md bg-muted">
-                        <SteamIcon className="h-8 w-8 text-muted-foreground" />
-                      </AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <h2 className="text-2xl text-foreground [&]:m-0">{input}</h2>
-                      <h3 className="text-primary [&]:m-0">Community Review Summary</h3>
+                  <CardHeader className="flex flex-row items-center gap-4 justify-between">
+                    <div className="flex items-center gap-4">
+                      <Avatar className="h-16 w-16 rounded-md">
+                        <AvatarImage
+                          src={`https://steamcdn-a.akamaihd.net/steam/apps/${input}/header.jpg`}
+                          className="object-cover"
+                          alt={input}
+                        />
+                        <AvatarFallback className="rounded-md bg-muted">
+                          <SteamIcon className="h-8 w-8 text-muted-foreground" />
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex flex-col">
+                        <h2 className="text-2xl text-foreground [&]:m-0">{input}</h2>
+                        <h3 className="text-primary [&]:m-0">Community Review Summary</h3>
+                      </div>
+                    </div>
+                    <div className="h-16 flex flex-col">
+                      <a
+                        href={`https://store.steampowered.com/app/${object.appId}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm text-primary/70 hover:text-primary underline-offset-4 hover:underline transition-colors"
+                      >
+                        View Store Page →
+                      </a>
                     </div>
                   </CardHeader>
                   <CardContent>
                     <p className="leading-7 mb-4">{object.summary?.overall}</p>
                     <div className="space-y-4">
                       <div>
-                        <h4 className="font-semibold text-primary">Pros:</h4>
+                        <div className="flex items-center gap-2">
+                          <h4 className="font-semibold text-primary">Pros</h4>
+                          <a
+                            href={`https://store.steampowered.com/app/${object.appId}?filterLanguage=english&filterMood=positive#app_reviews_hash`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-sm text-primary/70 hover:text-primary underline-offset-4 hover:underline transition-colors"
+                          >
+                            View on Steam →
+                          </a>
+                        </div>
                         <ul className="list-disc pl-5">
                           {object.summary?.pros?.map((pro, i) => (
                             <li key={i}>{pro}</li>
@@ -219,7 +242,17 @@ function SteamSummarize() {
                         </ul>
                       </div>
                       <div>
-                        <h4 className="font-semibold text-primary">Cons:</h4>
+                        <div className="flex items-center gap-2">
+                          <h4 className="font-semibold text-primary">Cons</h4>
+                          <a
+                            href={`https://store.steampowered.com/app/${object.appId}?filterLanguage=english&filterMood=negative#app_reviews_hash`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-sm text-primary/70 hover:text-primary underline-offset-4 hover:underline transition-colors"
+                          >
+                            View on Steam →
+                          </a>
+                        </div>
                         <ul className="list-disc pl-5">
                           {object.summary?.cons?.map((con, i) => (
                             <li key={i}>{con}</li>
@@ -227,13 +260,15 @@ function SteamSummarize() {
                         </ul>
                       </div>
                       <div>
-                        <h4 className="font-semibold text-primary">Recommendation:</h4>
+                        <div className="flex items-center gap-2 w-full">
+                          <h4 className="font-semibold text-primary">Recommendation</h4>
+                        </div>
                         <p>{object.summary?.recommendation}</p>
                       </div>
                     </div>
                   </CardContent>
-                  <CardFooter>
-                    <p className="text-sm text-muted-foreground text-end w-full">
+                  <CardFooter className="flex flex-col gap-3 w-full">
+                    <p className="text-sm text-muted-foreground text-center w-full">
                       Summary generated using AI. Results may vary.
                     </p>
                   </CardFooter>
