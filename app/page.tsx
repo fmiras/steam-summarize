@@ -2,12 +2,14 @@ import { SteamSummarize } from '@/components/steam-summarize'
 import { AboutSection } from '@/components/about-section'
 import Script from 'next/script'
 
-interface HomeProps {
-  searchParams: { [key: string]: string | string[] | undefined }
-}
-
-export default function Home({ searchParams }: HomeProps) {
-  const query = typeof searchParams.q === 'string' ? searchParams.q : ''
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: Promise<{
+    q: string
+  }>
+}) {
+  const query = (await searchParams).q || ''
 
   const structuredData = {
     '@context': 'https://schema.org',

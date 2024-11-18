@@ -7,6 +7,7 @@ export async function POST(req: Request) {
     const game = await searchGame(q)
     return Response.json({ game })
   } catch (error) {
+    console.error(error)
     return Response.json({ error: 'Game not found' }, { status: 404 })
   }
 }
