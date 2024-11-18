@@ -72,6 +72,7 @@ function SteamSummarize({ initialQuery = '' }: SteamSummarizeProps) {
     object,
     isLoading: isLoadingSummary,
     submit,
+    error: summaryError,
   } = useObject({
     api: '/api/summary',
     schema: summarySchema,
@@ -89,26 +90,15 @@ function SteamSummarize({ initialQuery = '' }: SteamSummarizeProps) {
       setError(null)
 
       if (!input?.trim()) {
-        setError('Please enter a valid game title or Steam App ID')
         return
       }
 
-      if (!game) {
-        searchGame(input.trim())
-        return
-      }
+      searchGame(input.trim())
 
       const newUrl = `${window.location.pathname}?q=${encodeURIComponent(input.trim())}`
       router.push(newUrl)
-
-      try {
-        submit({ prompt: input.trim() })
-      } catch (err) {
-        console.error(err)
-        setError(`There was an error getting the game summary. Please try again.`)
-      }
     },
-    [input, router, submit, searchGame, game]
+    [input, router, searchGame]
   )
 
   // Load initial query if present in URL
@@ -120,6 +110,24 @@ function SteamSummarize({ initialQuery = '' }: SteamSummarizeProps) {
       setInitialLoad(false)
     }
   }, [initialLoad, initialQuery, handleSearch])
+
+  // Show error if game not found
+  useEffect(() => {
+    if (!isLoadingGame && !game) {
+      setError('Game not found. Please try again.')
+    }
+  }, [isLoadingGame, game])
+
+  // Summarize game when game is loaded
+  useEffect(() => {
+    if (game && !isLoadingSummary) {
+      if (summaryError) {
+        setError('Failed to generate summary. Please try again later.')
+        return
+      }
+      submit({ prompt: game.name })
+    }
+  }, [game, submit, isLoadingSummary, summaryError])
 
   return (
     <div className="container mx-auto p-6 max-w-4xl min-h-screen flex flex-col justify-center">
@@ -204,7 +212,7 @@ function SteamSummarize({ initialQuery = '' }: SteamSummarizeProps) {
 
         <div className="min-h-[400px] max-w-2xl mx-auto">
           <AnimatePresence mode="wait">
-            {error && (
+            {(error || summaryError) && (
               <motion.section
                 aria-label="Error"
                 key="error"
@@ -219,7 +227,9 @@ function SteamSummarize({ initialQuery = '' }: SteamSummarizeProps) {
                   className="bg-destructive/10 border border-destructive"
                 >
                   <AlertCircle className="h-5 w-5 text-destructive" />
-                  <AlertDescription>{error}</AlertDescription>
+                  <AlertDescription>
+                    {error || 'Failed to generate summary. Please try again later.'}
+                  </AlertDescription>
                 </Alert>
               </motion.section>
             )}
