@@ -67,7 +67,7 @@ function SteamSummarize({ initialQuery = '' }: SteamSummarizeProps) {
   const [initialLoad, setInitialLoad] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  const { game, isLoading: isLoadingGame } = useGameSearch(input)
+  const { game, isLoading: isLoadingGame, searchGame } = useGameSearch(input)
   const {
     object,
     isLoading: isLoadingSummary,
@@ -93,17 +93,22 @@ function SteamSummarize({ initialQuery = '' }: SteamSummarizeProps) {
         return
       }
 
+      if (!game) {
+        searchGame(input.trim())
+        return
+      }
+
       const newUrl = `${window.location.pathname}?q=${encodeURIComponent(input.trim())}`
       router.push(newUrl)
 
       try {
-        await submit({ prompt: input.trim() })
+        submit({ prompt: input.trim() })
       } catch (err) {
         console.error(err)
         setError(`There was an error getting the game summary. Please try again.`)
       }
     },
-    [input, router, submit]
+    [input, router, submit, searchGame, game]
   )
 
   // Load initial query if present in URL
@@ -254,16 +259,16 @@ function SteamSummarize({ initialQuery = '' }: SteamSummarizeProps) {
                     <div className="flex items-center gap-4">
                       <Avatar className="h-16 w-16 rounded-md">
                         <AvatarImage
-                          src={`https://steamcdn-a.akamaihd.net/steam/apps/${input}/header.jpg`}
+                          src={`https://steamcdn-a.akamaihd.net/steam/apps/${game?.id}/header.jpg`}
                           className="object-cover"
-                          alt={input}
+                          alt={game?.name ?? 'Game'}
                         />
                         <AvatarFallback className="rounded-md bg-muted">
                           <SteamIcon className="h-8 w-8 text-muted-foreground" />
                         </AvatarFallback>
                       </Avatar>
                       <div className="flex flex-col">
-                        <h2 className="text-2xl text-foreground [&]:m-0">{input}</h2>
+                        <h2 className="text-2xl text-foreground [&]:m-0">{game?.name}</h2>
                         <h3 className="text-primary [&]:m-0">Community Review Summary</h3>
                       </div>
                     </div>

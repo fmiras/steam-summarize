@@ -39,12 +39,6 @@ export function useGameSearch(query: string): UseGameSearchReturn {
     }
   }, [])
 
-  useEffect(() => {
-    if (query) {
-      searchGame(query)
-    }
-  }, [query, searchGame])
-
   return {
     game,
     isLoading,
