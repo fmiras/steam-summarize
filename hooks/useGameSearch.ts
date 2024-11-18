@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 interface Game {
   id: string
@@ -12,22 +12,18 @@ interface UseGameSearchReturn {
   searchGame: (query: string) => Promise<void>
 }
 
-export function useGameSearch(): UseGameSearchReturn {
+export function useGameSearch(query: string): UseGameSearchReturn {
   const [game, setGame] = useState<Game | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const searchGame = async (query: string) => {
+  const searchGame = useCallback(async (query: string) => {
     try {
       setIsLoading(true)
       setError(null)
 
-      const response = await fetch('/api/game', {
+      const response = await fetch(`/api/game?q=${query}`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ prompt: query }),
       })
 
       if (!response.ok) {
@@ -35,13 +31,19 @@ export function useGameSearch(): UseGameSearchReturn {
       }
 
       const data = await response.json()
-      setGame(data.game)
+      setGame(data)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred')
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [])
+
+  useEffect(() => {
+    if (query) {
+      searchGame(query)
+    }
+  }, [query, searchGame])
 
   return {
     game,

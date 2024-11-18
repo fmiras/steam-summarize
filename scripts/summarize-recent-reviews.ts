@@ -5,8 +5,8 @@ import { openai } from '@ai-sdk/openai'
 import { streamText } from 'ai'
 import cliProgress from 'cli-progress'
 
-import { fetchReviews } from '../lib/steam.ts'
-import type { SteamReview } from '../lib/steam.ts'
+import { fetchReviews } from '@/lib/steam.ts'
+import type { Review } from '@/app/api/reviews/schema.ts'
 
 const GAME_ID = '1091500'
 const bar1 = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic)
@@ -15,7 +15,7 @@ if (!process.env.OPENAI_API_KEY) {
   throw new Error('OPENAI_API_KEY is not set')
 }
 
-async function summarizeAndOutput(reviews: SteamReview[]) {
+async function summarizeAndOutput(reviews: Review[]) {
   console.log('Generating summary...')
   const response = await streamText({
     model: openai('gpt-4o-mini'),

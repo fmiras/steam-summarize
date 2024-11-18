@@ -1,6 +1,7 @@
 import { SteamSummarize } from '@/components/steam-summarize'
 import { AboutSection } from '@/components/about-section'
 import Script from 'next/script'
+import Footer from '@/components/footer'
 
 export default async function Home({
   searchParams,
@@ -42,17 +43,7 @@ export default async function Home({
       />
       <SteamSummarize initialQuery={query} />
       <AboutSection />
-      <footer className="bottom-0 w-full py-4 text-center text-sm text-gray-500 bg-black/20 p-4 rounded-lg backdrop-blur">
-        Made with ❤️ by{' '}
-        <a
-          href="https://fmiras.com"
-          className="hover:text-gray-700 underline"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          fefo
-        </a>
-      </footer>
+      <Footer />
     </>
   )
 }

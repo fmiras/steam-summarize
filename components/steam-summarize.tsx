@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, Suspense, useEffect } from 'react'
+import { useState, Suspense, useEffect, useCallback } from 'react'
 import { experimental_useObject as useObject } from 'ai/react'
 import { Search, Loader2, AlertCircle, ComputerIcon as SteamIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -11,10 +11,19 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useRouter } from 'next/navigation'
 import { summarySchema } from '@/app/api/summary/schema'
+import { useGameSearch } from '@/hooks/useGameSearch'
 
 interface SteamSummarizeProps {
   initialQuery?: string
 }
+
+const exampleQueries = [
+  { name: 'Cyberpunk 2077' },
+  { name: 'God of War' },
+  { name: 'Elden Ring' },
+  { name: 'The Last of Us' },
+  { name: 'Red Dead Redemption 2' },
+]
 
 // const CARDS = [
 //   {
@@ -56,57 +65,56 @@ function SteamSummarize({ initialQuery = '' }: SteamSummarizeProps) {
   const router = useRouter()
   const [input, setInput] = useState(initialQuery)
   const [initialLoad, setInitialLoad] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
-    if (initialLoad && initialQuery) {
-      const syntheticEvent = {
-        preventDefault: () => {},
-      } as React.FormEvent
-
-      setInput(initialQuery)
-      handleSearch(syntheticEvent)
-      setInitialLoad(false)
-    }
-  }, [initialQuery]) // eslint-disable-line react-hooks/exhaustive-deps
-
-  const { object, isLoading, submit } = useObject({
+  const { game, isLoading: isLoadingGame } = useGameSearch(input)
+  const {
+    object,
+    isLoading: isLoadingSummary,
+    submit,
+  } = useObject({
     api: '/api/summary',
     schema: summarySchema,
   })
 
-  const [error, setError] = useState<string | null>(null)
+  const isLoading = isLoadingGame || isLoadingSummary
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInput(e.target.value)
   }
 
-  const handleSearch = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError(null)
+  const handleSearch = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault()
+      setError(null)
 
-    if (!input?.trim()) {
-      setError('Please enter a valid game title or Steam App ID')
-      return
+      if (!input?.trim()) {
+        setError('Please enter a valid game title or Steam App ID')
+        return
+      }
+
+      const newUrl = `${window.location.pathname}?q=${encodeURIComponent(input.trim())}`
+      router.push(newUrl)
+
+      try {
+        await submit({ prompt: input.trim() })
+      } catch (err) {
+        console.error(err)
+        setError(`There was an error getting the game summary. Please try again.`)
+      }
+    },
+    [input, router, submit]
+  )
+
+  // Load initial query if present in URL
+  useEffect(() => {
+    if (initialLoad && initialQuery) {
+      const syntheticEvent = { preventDefault: () => {} } as React.FormEvent
+      setInput(initialQuery)
+      handleSearch(syntheticEvent)
+      setInitialLoad(false)
     }
-
-    const newUrl = `${window.location.pathname}?q=${encodeURIComponent(input.trim())}`
-    router.push(newUrl)
-
-    try {
-      await submit({ prompt: input.trim() })
-    } catch (err) {
-      console.error(err)
-      setError(`There was an error getting the game summary. Please try again.`)
-    }
-  }
-
-  const exampleQueries = [
-    { name: 'Cyberpunk 2077' },
-    { name: 'God of War' },
-    { name: 'Elden Ring' },
-    { name: 'The Last of Us' },
-    { name: 'Red Dead Redemption 2' },
-  ]
+  }, [initialLoad, initialQuery, handleSearch])
 
   return (
     <div className="container mx-auto p-6 max-w-4xl min-h-screen flex flex-col justify-center">
@@ -261,7 +269,7 @@ function SteamSummarize({ initialQuery = '' }: SteamSummarizeProps) {
                     </div>
                     <div className="h-16 flex flex-col">
                       <a
-                        href={`https://store.steampowered.com/app/${object.appId}`}
+                        href={`https://store.steampowered.com/app/${game?.id}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-sm text-primary/70 hover:text-primary underline-offset-4 hover:underline transition-colors"
@@ -271,13 +279,13 @@ function SteamSummarize({ initialQuery = '' }: SteamSummarizeProps) {
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <p className="leading-7 mb-4">{object.summary?.overall}</p>
+                    <p className="leading-7 mb-4">{object?.overall}</p>
                     <div className="space-y-4">
                       <div>
                         <div className="flex items-center gap-2">
                           <h4 className="font-semibold text-primary">Pros</h4>
                           <a
-                            href={`https://store.steampowered.com/app/${object.appId}?filterLanguage=english&filterMood=positive#app_reviews_hash`}
+                            href={`https://store.steampowered.com/app/${game?.id}?filterLanguage=english&filterMood=positive#app_reviews_hash`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-sm text-primary/70 hover:text-primary underline-offset-4 hover:underline transition-colors"
@@ -295,7 +303,7 @@ function SteamSummarize({ initialQuery = '' }: SteamSummarizeProps) {
                         <div className="flex items-center gap-2">
                           <h4 className="font-semibold text-primary">Cons</h4>
                           <a
-                            href={`https://store.steampowered.com/app/${object.appId}?filterLanguage=english&filterMood=negative#app_reviews_hash`}
+                            href={`https://store.steampowered.com/app/${game?.id}?filterLanguage=english&filterMood=negative#app_reviews_hash`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-sm text-primary/70 hover:text-primary underline-offset-4 hover:underline transition-colors"
