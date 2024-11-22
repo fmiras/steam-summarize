@@ -67,6 +67,7 @@ function SteamSummarize({ query = '' }: SteamSummarizeProps) {
 
   const search = useCallback(
     (newQuery: string) => {
+      setInput(newQuery.trim())
       router.push(`?q=${encodeURIComponent(newQuery.trim())}`)
     },
     [router]

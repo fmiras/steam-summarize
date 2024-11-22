@@ -8,10 +8,11 @@ import { summarySchema } from '@/app/api/summary/schema'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { WeightIndicator } from '@/components/ui/weight-indicator'
 import { useGameSearch } from '@/hooks/use-game-search'
 import { useReviews } from '@/hooks/use-reviews'
+
 import { CardStack } from './ui/card-stack'
-import { WeightIndicator } from '@/components/ui/weight-indicator'
 
 export default function SearchResult({ query }: { query: string }) {
   const { game, isLoading: isLoadingGame, error: gameError } = useGameSearch(query)
@@ -98,7 +99,7 @@ export default function SearchResult({ query }: { query: string }) {
       transition={{ duration: 0.2 }}
     >
       <Card className="bg-card border border-border shadow-neon">
-        <CardHeader className="flex flex-row items-center gap-4 justify-between">
+        <CardHeader className="flex flex-col md:flex-row justify-between gap-4">
           <div className="flex items-center gap-4">
             {isLoadingGame ? (
               <Skeleton className="h-16 w-16 rounded-md" />
@@ -124,18 +125,29 @@ export default function SearchResult({ query }: { query: string }) {
             </div>
           </div>
 
-          <div className="h-16 flex flex-col">
+          <div className="flex gap-6">
             <a
               href={`https://store.steampowered.com/app/${game?.id}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm text-primary/70 hover:text-primary underline-offset-4 hover:underline transition-colors"
+              className="text-sm text-muted-foreground hover:text-primary transition-colors"
             >
-              View Store Page →
+              <div className="flex items-center gap-2">
+                <SteamIcon className="h-4 w-4" />
+                View on Steam
+              </div>
+            </a>
+            <a
+              href={`https://store.steampowered.com/app/${game?.id}#app_reviews_hash`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm text-muted-foreground hover:text-primary transition-colors"
+            >
+              View Reviews
             </a>
           </div>
         </CardHeader>
-        <CardContent className="py-0 pt-4 flex flex-col items-center justify-center space-y-4">
+        <CardContent className="py-4 flex flex-col items-center justify-center space-y-4">
           {isLoading ? (
             <div className="w-full flex flex-col items-center justify-center">
               <CardStack
@@ -170,46 +182,30 @@ export default function SearchResult({ query }: { query: string }) {
               <p className="leading-7 mb-4">{object?.overall}</p>
               <div className="space-y-4">
                 <div>
-                  <div className="flex items-center gap-2">
-                    <h4 className="font-semibold text-primary">Pros</h4>
-                    <a
-                      href={`https://store.steampowered.com/app/${game?.id}?filterLanguage=english&filterMood=positive#app_reviews_hash`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-sm text-primary/70 hover:text-primary underline-offset-4 hover:underline transition-colors"
-                    >
-                      View on Steam →
-                    </a>
-                  </div>
+                  <h4 className="font-semibold text-primary">Pros</h4>
                   <ul className="flex flex-col gap-2">
                     {object?.pros
                       ?.sort((a, b) => (b?.weight ?? 0) - (a?.weight ?? 0))
                       .map((review, i) => (
-                        <li key={i} className="flex items-center gap-2">
-                          <WeightIndicator weight={review?.weight ?? 0} variant="positive" />
+                        <li key={i} className="flex items-center gap-3 md:gap-2">
+                          <div className="w-6 md:w-12">
+                            <WeightIndicator weight={review?.weight ?? 0} variant="positive" />
+                          </div>
                           {review?.content}
                         </li>
                       ))}
                   </ul>
                 </div>
                 <div>
-                  <div className="flex items-center gap-2">
-                    <h4 className="font-semibold text-primary">Cons</h4>
-                    <a
-                      href={`https://store.steampowered.com/app/${game?.id}?filterLanguage=english&filterMood=negative#app_reviews_hash`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-sm text-primary/70 hover:text-primary underline-offset-4 hover:underline transition-colors"
-                    >
-                      View on Steam →
-                    </a>
-                  </div>
+                  <h4 className="font-semibold text-primary">Cons</h4>
                   <ul className="flex flex-col gap-2">
                     {object?.cons
                       ?.sort((a, b) => (b?.weight ?? 0) - (a?.weight ?? 0))
                       .map((review, i) => (
                         <li key={i} className="flex items-center gap-2">
-                          <WeightIndicator weight={review?.weight ?? 0} variant="negative" />
+                          <div className="w-6 md:w-12">
+                            <WeightIndicator weight={review?.weight ?? 0} variant="negative" />
+                          </div>
                           {review?.content}
                         </li>
                       ))}
