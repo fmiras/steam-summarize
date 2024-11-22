@@ -16,7 +16,7 @@ import { CardStack } from './ui/card-stack'
 
 export default function SearchResult({ query }: { query: string }) {
   const { game, isLoading: isLoadingGame, error: gameError } = useGameSearch(query)
-  const { reviews, isLoading: isLoadingReviews, fetchReviews } = useReviews(game?.id)
+  const { reviews, isLoading: isLoadingReviews } = useReviews(game?.id)
 
   const {
     object,
@@ -32,9 +32,7 @@ export default function SearchResult({ query }: { query: string }) {
     if (game?.id) {
       submit({ prompt: query, gameId: game.id })
     }
-  }, [query, game?.id])
-
-  const isLoading = isLoadingGame || isLoadingSummary
+  }, [game?.id])
 
   if (gameError) {
     return (
@@ -148,77 +146,83 @@ export default function SearchResult({ query }: { query: string }) {
           </div>
         </CardHeader>
         <CardContent className="py-4 flex flex-col items-center justify-center space-y-4">
-          {isLoading ? (
+          {isLoadingGame || isLoadingSummary ? (
             <div className="w-full flex flex-col items-center justify-center">
-              <CardStack
-                items={
-                  isLoadingReviews
-                    ? Array.from({ length: 3 }).map((_, i) => ({
-                        id: i,
-                        name: <Skeleton className="w-24 h-4" />,
-                        designation: <Skeleton className="w-24 h-4" />,
-                        content: <Skeleton className="w-full h-4" />,
-                      }))
-                    : reviews
-                        .filter((review) => review.review.length < 250)
-                        .slice(0, 3)
-                        .map((review) => ({
-                          id: parseInt(review.recommendationid),
-                          name: `Voted: ${review.votes_up}`,
-                          designation: `Date: ${new Date(
-                            review.timestamp_created * 1000
-                          ).toLocaleString()}`,
-                          content: review.review,
-                        }))
-                }
-              />
+              {isLoadingReviews ? (
+                <CardStack
+                  items={Array.from({ length: 3 }).map((_, i) => ({
+                    id: i,
+                    name: <Skeleton className="w-24 h-4" />,
+                    designation: <Skeleton className="w-24 h-4" />,
+                    content: <Skeleton className="w-full h-4" />,
+                    votedUp: null,
+                  }))}
+                />
+              ) : (
+                <CardStack
+                  items={reviews
+                    .filter((review) => review.review.length < 250)
+                    .slice(0, 3)
+                    .map((review) => ({
+                      id: parseInt(review.recommendationid),
+                      name: `Voted: ${review.votes_up}`,
+                      votedUp: review.voted_up,
+                      designation: `Playtime: ${Math.round(
+                        parseInt(review.author?.playtime_at_review?.toString() || '0') / 60
+                      )} minutes`,
+                      content: review.review,
+                    }))}
+                />
+              )}
               <div className="w-full p-6 gap-2 flex items-center justify-center">
                 <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
                 <p className="text-muted-foreground">Generating summary</p>
               </div>
             </div>
           ) : (
-            <div>
-              <p className="leading-7 mb-4">{object?.overall}</p>
-              <div className="space-y-4">
-                <div>
-                  <h4 className="font-semibold text-primary">Pros</h4>
-                  <ul className="flex flex-col gap-2">
-                    {object?.pros
-                      ?.sort((a, b) => (b?.weight ?? 0) - (a?.weight ?? 0))
-                      .map((review, i) => (
-                        <li key={i} className="flex items-center gap-3 md:gap-2">
-                          <div className="w-6 md:w-12">
-                            <WeightIndicator weight={review?.weight ?? 0} variant="positive" />
-                          </div>
-                          {review?.content}
-                        </li>
-                      ))}
-                  </ul>
-                </div>
-                <div>
-                  <h4 className="font-semibold text-primary">Cons</h4>
-                  <ul className="flex flex-col gap-2">
-                    {object?.cons
-                      ?.sort((a, b) => (b?.weight ?? 0) - (a?.weight ?? 0))
-                      .map((review, i) => (
-                        <li key={i} className="flex items-center gap-2">
-                          <div className="w-6 md:w-12">
-                            <WeightIndicator weight={review?.weight ?? 0} variant="negative" />
-                          </div>
-                          {review?.content}
-                        </li>
-                      ))}
-                  </ul>
-                </div>
-                <div>
-                  <div className="flex items-center gap-2 w-full">
-                    <h4 className="font-semibold text-primary">Recommendation</h4>
+            object && (
+              <div>
+                <p className="leading-7 mb-4">{object?.overall}</p>
+                <div className="space-y-4">
+                  <div>
+                    <h4 className="font-semibold text-primary">Pros</h4>
+                    <ul className="flex flex-col gap-2">
+                      {object?.pros
+                        ?.sort((a, b) => (b?.weight ?? 0) - (a?.weight ?? 0))
+                        .map((review, i) => (
+                          <li key={i} className="flex items-center gap-3 md:gap-2">
+                            <div className="w-6 md:w-12">
+                              <WeightIndicator weight={review?.weight ?? 0} variant="positive" />
+                            </div>
+                            {review?.content}
+                          </li>
+                        ))}
+                    </ul>
                   </div>
-                  <p>{object?.recommendation}</p>
+                  <div>
+                    <h4 className="font-semibold text-primary">Cons</h4>
+                    <ul className="flex flex-col gap-2">
+                      {object?.cons
+                        ?.sort((a, b) => (b?.weight ?? 0) - (a?.weight ?? 0))
+                        .map((review, i) => (
+                          <li key={i} className="flex items-center gap-2">
+                            <div className="w-6 md:w-12">
+                              <WeightIndicator weight={review?.weight ?? 0} variant="negative" />
+                            </div>
+                            {review?.content}
+                          </li>
+                        ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2 w-full">
+                      <h4 className="font-semibold text-primary">Recommendation</h4>
+                    </div>
+                    <p>{object?.recommendation}</p>
+                  </div>
                 </div>
               </div>
-            </div>
+            )
           )}
         </CardContent>
       </Card>

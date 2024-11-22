@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { optional, z } from 'zod'
 
 export const reviewsQuerySchema = z.object({
   q: z.string(),
@@ -23,9 +23,11 @@ export const reviewSchema = z.object({
   author: z
     .object({
       steamid: z.string(),
-      name: z.string(),
       num_games_owned: z.number(),
       num_reviews: z.number(),
+      playtime_at_review: z.number(),
+      playtime_forever: z.number(),
+      playtime_last_two_weeks: z.number().optional(),
     })
     .optional(),
 })
