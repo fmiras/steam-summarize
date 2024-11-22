@@ -6,8 +6,8 @@ let interval: NodeJS.Timeout
 
 type Card = {
   id: number
-  name: string
-  designation: string
+  name: React.ReactNode
+  designation: React.ReactNode
   content: React.ReactNode
 }
 
