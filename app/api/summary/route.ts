@@ -33,7 +33,7 @@ export async function POST(req: Request) {
     messages: [
       {
         role: 'user',
-        content: `You're a professional game reviewer. Analyze these Steam reviews and provide a structured summary: ${reviews
+        content: `You're a professional game reviewer. Analyze these Steam reviews and provide a structured summary with weights based on the weighted_vote_score between 1 and 5: ${reviews
           .map((r) => r.review)
           .join('\n')}`,
       },

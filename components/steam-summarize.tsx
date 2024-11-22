@@ -1,11 +1,12 @@
 'use client'
-
 import { useState, Suspense, useCallback } from 'react'
-import { Search, Loader2, ComputerIcon as SteamIcon } from 'lucide-react'
+import { Search, ComputerIcon as SteamIcon } from 'lucide-react'
+import { AnimatePresence } from 'framer-motion'
+import { useRouter } from 'next/navigation'
+
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { AnimatePresence } from 'framer-motion'
-import { useRouter, useSearchParams } from 'next/navigation'
+
 import SearchResult from './search-result'
 
 interface SteamSummarizeProps {
@@ -74,14 +75,9 @@ function SteamSummarize({ query = '' }: SteamSummarizeProps) {
   const handleSearch = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault()
-
-      if (!input?.trim()) {
-        return
-      }
-
       search(input.trim())
     },
-    [input, router]
+    [input, search]
   )
 
   return (
@@ -123,11 +119,7 @@ function SteamSummarize({ query = '' }: SteamSummarizeProps) {
                   border border-primary/50 hover:border-primary
                   hover:shadow-[0_0_15px_rgba(0,255,150,0.3)]
                   transition-all duration-300 rounded-lg backdrop-blur-sm"
-                // disabled={isLoading}
               >
-                {/* {isLoading ? (
-                  <Loader2 className="h-5 w-5 animate-spin" />
-                ) : ( */}
                 <div className="flex items-center px-3">
                   <Search className="h-4 w-4 mr-2" />
                   <span className="font-medium hidden sm:inline">Search</span>

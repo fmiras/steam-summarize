@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import type { Review } from '@/app/api/reviews/schema'
 
 interface UseReviewsReturn {
@@ -9,13 +9,13 @@ interface UseReviewsReturn {
   fetchReviews: (query: string, cursor?: string) => Promise<void>
 }
 
-export function useReviews(): UseReviewsReturn {
+export function useReviews(gameId?: string): UseReviewsReturn {
   const [reviews, setReviews] = useState<Review[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [hasMore, setHasMore] = useState(true)
 
-  const fetchReviews = async (query: string, cursor?: string) => {
+  const fetchReviews = useCallback(async (query: string, cursor?: string) => {
     try {
       setIsLoading(true)
       setError(null)
@@ -45,7 +45,13 @@ export function useReviews(): UseReviewsReturn {
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [])
+
+  useEffect(() => {
+    if (gameId) {
+      fetchReviews(gameId)
+    }
+  }, [gameId, fetchReviews])
 
   return {
     reviews,

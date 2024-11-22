@@ -1,4 +1,5 @@
 'use client'
+import { useEffect } from 'react'
 import { experimental_useObject as useObject } from 'ai/react'
 import { motion } from 'framer-motion'
 import { AlertCircle, Loader2, ComputerIcon as SteamIcon } from 'lucide-react'
@@ -7,26 +8,32 @@ import { summarySchema } from '@/app/api/summary/schema'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { useGameSearch } from '@/hooks/useGameSearch'
-import { useEffect } from 'react'
+import { useGameSearch } from '@/hooks/use-game-search'
+import { useReviews } from '@/hooks/use-reviews'
+import { CardStack } from './ui/card-stack'
+import { WeightIndicator } from '@/components/ui/weight-indicator'
 
 export default function SearchResult({ query }: { query: string }) {
   const { game, isLoading: isLoadingGame, error: gameError } = useGameSearch(query)
-  // const {
-  //   object,
-  //   isLoading: isLoadingSummary,
-  //   submit,
-  //   error: summaryError,
-  // } = useObject({
-  //   api: '/api/summary',
-  //   schema: summarySchema,
-  // })
+  const { reviews, isLoading: isLoadingReviews, fetchReviews } = useReviews(game?.id)
 
-  // useEffect(() => {
-  //   if (game && !isLoadingSummary) {
-  //     submit({ prompt: input })
-  //   }
-  // }, [input, submit, game, isLoadingSummary])
+  const {
+    object,
+    isLoading: isLoadingSummary,
+    submit,
+    error: summaryError,
+  } = useObject({
+    api: '/api/summary',
+    schema: summarySchema,
+  })
+
+  useEffect(() => {
+    if (game?.id) {
+      submit({ prompt: query, gameId: game.id })
+    }
+  }, [query, game?.id])
+
+  const isLoading = isLoadingGame || isLoadingSummary
 
   if (gameError) {
     return (
@@ -116,12 +123,107 @@ export default function SearchResult({ query }: { query: string }) {
               </h3>
             </div>
           </div>
-        </CardHeader>
-        <CardContent className="py-8">
-          <div className="flex flex-col items-center justify-center space-y-4">
-            <Loader2 className="h-10 w-10 animate-spin text-primary" />
-            <p className="text-muted-foreground">Analyzing player reviews...</p>
+
+          <div className="h-16 flex flex-col">
+            <a
+              href={`https://store.steampowered.com/app/${game?.id}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm text-primary/70 hover:text-primary underline-offset-4 hover:underline transition-colors"
+            >
+              View Store Page →
+            </a>
           </div>
+        </CardHeader>
+        <CardContent className="py-0 pt-4 flex flex-col items-center justify-center space-y-4">
+          {isLoading ? (
+            <div className="w-full flex flex-col items-center justify-center">
+              <CardStack
+                items={
+                  isLoadingReviews
+                    ? Array.from({ length: 3 }).map((_, i) => ({
+                        id: i,
+                        name: <Skeleton className="w-24 h-4" />,
+                        designation: <Skeleton className="w-24 h-4" />,
+                        content: <Skeleton className="w-full h-4" />,
+                      }))
+                    : reviews
+                        .filter((review) => review.review.length < 250)
+                        .slice(0, 3)
+                        .map((review) => ({
+                          id: parseInt(review.recommendationid),
+                          name: `Voted: ${review.votes_up}`,
+                          designation: `Date: ${new Date(
+                            review.timestamp_created * 1000
+                          ).toLocaleString()}`,
+                          content: review.review,
+                        }))
+                }
+              />
+              <div className="w-full p-6 gap-2 flex items-center justify-center">
+                <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                <p className="text-muted-foreground">Generating summary</p>
+              </div>
+            </div>
+          ) : (
+            <div>
+              <p className="leading-7 mb-4">{object?.overall}</p>
+              <div className="space-y-4">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h4 className="font-semibold text-primary">Pros</h4>
+                    <a
+                      href={`https://store.steampowered.com/app/${game?.id}?filterLanguage=english&filterMood=positive#app_reviews_hash`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-primary/70 hover:text-primary underline-offset-4 hover:underline transition-colors"
+                    >
+                      View on Steam →
+                    </a>
+                  </div>
+                  <ul className="flex flex-col gap-2">
+                    {object?.pros
+                      ?.sort((a, b) => (b?.weight ?? 0) - (a?.weight ?? 0))
+                      .map((review, i) => (
+                        <li key={i} className="flex items-center gap-2">
+                          <WeightIndicator weight={review?.weight ?? 0} variant="positive" />
+                          {review?.content}
+                        </li>
+                      ))}
+                  </ul>
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h4 className="font-semibold text-primary">Cons</h4>
+                    <a
+                      href={`https://store.steampowered.com/app/${game?.id}?filterLanguage=english&filterMood=negative#app_reviews_hash`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-primary/70 hover:text-primary underline-offset-4 hover:underline transition-colors"
+                    >
+                      View on Steam →
+                    </a>
+                  </div>
+                  <ul className="flex flex-col gap-2">
+                    {object?.cons
+                      ?.sort((a, b) => (b?.weight ?? 0) - (a?.weight ?? 0))
+                      .map((review, i) => (
+                        <li key={i} className="flex items-center gap-2">
+                          <WeightIndicator weight={review?.weight ?? 0} variant="negative" />
+                          {review?.content}
+                        </li>
+                      ))}
+                  </ul>
+                </div>
+                <div>
+                  <div className="flex items-center gap-2 w-full">
+                    <h4 className="font-semibold text-primary">Recommendation</h4>
+                  </div>
+                  <p>{object?.recommendation}</p>
+                </div>
+              </div>
+            </div>
+          )}
         </CardContent>
       </Card>
     </motion.section>
