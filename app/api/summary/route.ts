@@ -3,6 +3,8 @@ import { streamObject } from 'ai'
 import { fetchReviews, searchGame } from '@/lib/steam'
 import { summarySchema } from './schema'
 
+const MAX_REVIEWS = process.env.NODE_ENV === 'production' ? 200 : 10
+
 // curl -X POST http://localhost:3000/api/summary -H "Content-Type: application/json" -d '{"prompt":"The Last of Us"}'
 export async function POST(req: Request) {
   const { prompt: query } = await req.json()
@@ -18,7 +20,7 @@ export async function POST(req: Request) {
   let cursor = firstCursor
 
   // Fetch up to 200 reviews
-  while (reviews.length < 200 && cursor) {
+  while (reviews.length < MAX_REVIEWS && cursor) {
     const data = await fetchReviews(gameId, cursor)
     reviews.push(...data.reviews)
     cursor = data.cursor

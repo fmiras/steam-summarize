@@ -41,7 +41,7 @@ export default async function Home({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
-      <SteamSummarize initialQuery={query} />
+      <SteamSummarize query={query} />
       <AboutSection />
       <Footer />
     </>

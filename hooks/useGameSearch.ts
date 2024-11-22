@@ -14,7 +14,7 @@ interface UseGameSearchReturn {
 
 export function useGameSearch(query: string): UseGameSearchReturn {
   const [game, setGame] = useState<Game | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   const searchGame = useCallback(async (query: string) => {
@@ -38,6 +38,12 @@ export function useGameSearch(query: string): UseGameSearchReturn {
       setIsLoading(false)
     }
   }, [])
+
+  useEffect(() => {
+    if (query) {
+      searchGame(query)
+    }
+  }, [query, searchGame])
 
   return {
     game,
