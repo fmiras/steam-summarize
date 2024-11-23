@@ -1,5 +1,6 @@
 import { openai } from '@ai-sdk/openai'
 import { streamObject } from 'ai'
+
 import { fetchReviews, searchGame } from '@/lib/steam'
 import { summarySchema } from './schema'
 

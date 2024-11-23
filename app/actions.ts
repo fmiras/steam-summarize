@@ -1,5 +1,5 @@
 'use server'
-import { redirect } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import { track } from '@vercel/analytics/server'
 
 import { Game } from '@/app/api/game/schema'
@@ -14,7 +14,14 @@ export async function search(formData: FormData) {
 }
 
 export async function getGameWithReviews(query: string): Promise<Game & { reviews: Review[] }> {
-  const game = await searchGame(query)
-  const response = await fetchReviews(game.id)
-  return { ...game, reviews: response.reviews }
+  try {
+    const game = await searchGame(query)
+    const response = await fetchReviews(game.id)
+    return { ...game, reviews: response.reviews }
+  } catch (error) {
+    if (error instanceof Error && error.message.includes('No games found')) {
+      notFound()
+    }
+    throw error
+  }
 }
