@@ -1,9 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 
-interface Game {
-  id: string
-  name: string
-}
+import { Game } from '@/app/api/game/schema'
 
 interface UseGameSearchReturn {
   game: Game | null

@@ -34,9 +34,6 @@ export const metadata: Metadata = {
     title: 'Steam Game Review Summarizer | AI-Powered Analysis',
     description: 'Get instant AI-powered summaries of Steam game reviews',
   },
-  verification: {
-    google: 'f9swlRJvAjMc_StIwPeniNQbM6pUFg7U2vnHELwgzrc',
-  },
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://steamsummarize.com'),
 }
 
@@ -51,7 +48,9 @@ export default function RootLayout({
         <link rel="canonical" href="https://steamsummarize.com" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col w-full items-center`}
+      >
         {children}
         <Analytics />
         <SpeedInsights />
