@@ -28,7 +28,7 @@ export default async function Home({
 
   return (
     <>
-      <div className="container space-y-8 max-w-4xl min-h-screen flex flex-col pt-12">
+      <div className="container space-y-8 max-w-4xl min-h-screen flex flex-col p-4 md:p-0 md:pt-12">
         <header className="text-center space-y-4">
           <div className="inline-flex items-center justify-center px-4 py-2 rounded-full bg-secondary">
             <SteamIcon className="w-5 h-5 mr-2 text-primary animate-pulse" />

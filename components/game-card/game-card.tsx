@@ -47,7 +47,7 @@ export async function GameCard({ query }: GameCardProps) {
         </div>
 
         <div className="text-muted-foreground text-sm">
-          <div className="flex gap-6 mb-2">
+          <div className="flex gap-6 mb-2 w-full justify-end">
             <a
               href={`https://store.steampowered.com/app/${game?.id}`}
               target="_blank"
