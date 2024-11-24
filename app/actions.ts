@@ -17,7 +17,10 @@ export async function getGameWithReviews(
       reviewDescription: response.query_summary.review_score_desc,
     }
   } catch (error) {
-    if (error instanceof Error && error.message.includes('No games found')) {
+    if (
+      error instanceof Error &&
+      (error.message.includes('No games found') || error.message.includes('Reviews not found'))
+    ) {
       notFound()
     }
     throw error

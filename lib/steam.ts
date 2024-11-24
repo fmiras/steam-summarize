@@ -21,6 +21,11 @@ export async function fetchReviews(appId: string, cursor = '*'): Promise<SteamAp
   )}&language=english`
   const response = await fetch(url)
   const data: SteamApiReviewsResponse = await response.json()
+
+  if (data.reviews.length === 0) {
+    throw new Error('Reviews not found')
+  }
+
   return data
 }
 
