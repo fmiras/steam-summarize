@@ -8,7 +8,6 @@ import { Input } from '@/components/ui/input'
 import { EmptyGameCard } from '@/components/game-card/empty-game-card'
 import { GameCard } from '@/components/game-card/game-card'
 import { LoadingGameCard } from '@/components/game-card/loading-game-card'
-import { search } from './actions'
 
 const exampleQueries = [
   { name: 'Cyberpunk 2077' },
@@ -49,11 +48,11 @@ export default async function Home({
         <section aria-label="Search" className="max-w-2xl mx-auto flex flex-col gap-8">
           <h2 className="sr-only">Search for a game</h2>
           <div className="space-y-4">
-            <form action={search}>
+            <form>
               <div className="relative">
                 <Input
                   type="text"
-                  name="query"
+                  name="q"
                   placeholder="Search any game on Steam..."
                   defaultValue={query}
                   className="w-full text-lg py-6 pr-24 bg-card/50 border-border/50 rounded-lg
@@ -77,8 +76,8 @@ export default async function Home({
             </form>
             <div className="flex flex-wrap gap-2 w-full justify-center">
               {exampleQueries.map((game) => (
-                <form key={game.name} action={search} className="contents">
-                  <input type="hidden" name="query" value={game.name} />
+                <form key={game.name} className="contents">
+                  <input type="hidden" name="q" value={game.name} />
                   <Button
                     type="submit"
                     variant="ghost"

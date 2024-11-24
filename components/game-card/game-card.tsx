@@ -1,9 +1,9 @@
 import { Avatar, AvatarImage, AvatarFallback } from '@radix-ui/react-avatar'
 import { ComputerIcon as SteamIcon } from 'lucide-react'
 
+import { getGameWithReviews } from '@/app/actions'
 import { Card, CardHeader, CardContent } from '@/components/ui/card'
 import GameSummary from '@/components/game-summary/game-summary'
-import { getGameWithReviews } from '@/app/actions'
 
 interface GameCardProps {
   query: string

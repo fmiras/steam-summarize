@@ -4,7 +4,6 @@ import { AboutSection } from '@/components/about-section'
 import Footer from '@/components/footer'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { search } from './actions'
 import ErrorGameCard from '@/components/game-card/error-game-card'
 
 const exampleQueries = [
@@ -38,11 +37,11 @@ export default async function NotFound() {
         <section aria-label="Search" className="max-w-2xl mx-auto flex flex-col gap-8">
           <h2 className="sr-only">Search for a game</h2>
           <div className="space-y-4">
-            <form action={search}>
+            <form>
               <div className="relative">
                 <Input
                   type="text"
-                  name="query"
+                  name="q"
                   placeholder="Search any game on Steam..."
                   className="w-full text-lg py-6 pr-24 bg-card/50 border-border/50 rounded-lg
                     focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all duration-300
@@ -65,8 +64,8 @@ export default async function NotFound() {
             </form>
             <div className="flex flex-wrap gap-2 w-full justify-center">
               {exampleQueries.map((game) => (
-                <form key={game.name} action={search} className="contents">
-                  <input type="hidden" name="query" value={game.name} />
+                <form key={game.name} className="contents">
+                  <input type="hidden" name="q" value={game.name} />
                   <Button
                     type="submit"
                     variant="ghost"
