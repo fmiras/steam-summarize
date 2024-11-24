@@ -4,10 +4,10 @@ import { experimental_useObject as useObject } from 'ai/react'
 import { Loader2, AlertCircle, RefreshCcw } from 'lucide-react'
 
 import { summarySchema } from '@/app/api/summary/schema'
+import { Game } from '@/app/api/game/schema'
+import { Review } from '@/app/api/reviews/schema'
 import { CardStack } from '@/components/ui/card-stack'
 import { WeightIndicator } from '@/components/ui/weight-indicator'
-import { Game } from '../../app/api/game/schema'
-import { Review } from '../../app/api/reviews/schema'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 
@@ -70,6 +70,7 @@ export default function GameSummary({
     if (game?.id) {
       submit({ prompt: query, gameId: game.id })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [game?.id])
 
   if (isLoadingSummary) {
