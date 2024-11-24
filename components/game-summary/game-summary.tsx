@@ -98,7 +98,7 @@ export default function GameSummary({
     )
   }
 
-  if (summaryError || !object) {
+  if (summaryError) {
     return (
       <ErrorGameSummary
         message="Unable to analyze the game reviews at this time. Please try again later."
